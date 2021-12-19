@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -22,6 +23,36 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({Key? key, required this.name}) : super(key: key);
+
+  final String name;
+
+  Widget welcomeMessage(){
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Text("Welcome to my App, " + name)
+        ]
+      )
+    );
+
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Second Route"),
+      ),
+      body: welcomeMessage()
+    );
+  }
+}
+
 
 class LoginForm extends StatefulWidget {
   const LoginForm({ Key? key }) : super(key: key);
@@ -119,9 +150,30 @@ class _LoginFormState extends State<LoginForm> {
 
                   if(value){
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("True"))
+                      const SnackBar(content: Text("Processing"))
                     );
+
+                    bool valid = true;
+          
+                    // Timer delay for now 
+
+                    Timer(Duration(seconds:3), () {
+
+                      final temp = _nameController.text;
+                      Navigator.pushReplacement(context, MaterialPageRoute( builder: (context) => SecondRoute(name: temp)));
+
+                      // reset if valid 
+                      if(valid){
+                        _nameController.text = '';
+                        _emailController.text = '';
+                        _passwordController.text = '';
+                        _rePasswordController.text = '';
+                      }
+
+
+                    });
                   }
+
 
               },
               child: const Text("Yip Yip"))
@@ -131,3 +183,5 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
+
+
