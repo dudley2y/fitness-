@@ -56,13 +56,13 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   @override
   Widget build(BuildContext context) {
 
-    final firebaseUser = context.watch<User?>();
+    final User? firebaseUser = context.watch<User?>();
 
     if( firebaseUser != null){
-      return SecondRoute(name: "Bob");
+      return SecondRoute(name: firebaseUser.email);
     }
-    return(
-      signupForm()
-    );
+    else{
+      return const signupForm();
+    }
   }
 }

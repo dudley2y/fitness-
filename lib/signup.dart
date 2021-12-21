@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness/authentication_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'SecondRoute.dart';
@@ -13,7 +16,8 @@ class signupForm extends StatefulWidget {
 class _signupFormState extends State<signupForm> {
 
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _rePasswordController = TextEditingController();
@@ -25,9 +29,10 @@ class _signupFormState extends State<signupForm> {
       child: Column(
         children:  <Widget>[
 
-          // Name 
-           TextFormField(
-             validator: (value) {
+          // First name 
+
+          TextFormField(
+            validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter some text';
               }
@@ -35,10 +40,24 @@ class _signupFormState extends State<signupForm> {
             },
             obscureText: false,
             decoration: const InputDecoration(
-              labelText: "Name"
-            ),
-            controller: _nameController,
+            labelText: "First Name"
           ),
+          controller: _firstNameController), 
+
+          // Last name 
+
+          TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+            obscureText: false,
+            decoration: const InputDecoration(
+            labelText: "Last Name"
+          ),
+          controller: _lastNameController),
 
           // Email 
           TextFormField(
@@ -98,20 +117,28 @@ class _signupFormState extends State<signupForm> {
                   final value = _formKey.currentState!.validate();
 
                   if(value){
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Processing"))
-                    );
-
-                    print(_emailController.text.trim());
-
+                    
                     context.read<AuthenticationService>().signUp(
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim()
                     );
 
-                    final temp = _nameController.text;
-                    Navigator.pushReplacement(context, MaterialPageRoute( builder: (context) => SecondRoute(name: temp)));
-                    _nameController.text = '';
+
+                    String? uid = context.read<AuthenticationService>().id();
+
+                    final usersRef = FirebaseFirestore.instance.collection('users');
+
+                    usersRef.doc(uid).set(
+                      {
+                        "first_name": _firstNameController.text, 
+                        "last_name": _lastNameController.text
+                        }
+                    );
+
+                    final temp = _firstNameController.text;
+                    //Navigator.pushReplacement(context, MaterialPageRoute( builder: (context) => SecondRoute(name: temp)));
+                    _firstNameController.text = '';
+                    _lastNameController.text = '';
                     _emailController.text = '';
                     _passwordController.text = '';
                     _rePasswordController.text = '';
