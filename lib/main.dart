@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness/authentication_service.dart';
@@ -5,7 +7,7 @@ import 'package:fitness/signup.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'SecondRoute.dart';
+import 'home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,20 +29,10 @@ class MyApp extends StatelessWidget {
           ),
         StreamProvider(
           create: (context) => context.read<AuthenticationService>().authStateChanges,
-          initialData: null,
-          )
+          initialData: FirebaseAuth.instance.currentUser,
+          ),
       ],
-      child: MaterialApp(
-        title: 'My Fitness App',
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Welcome to My Fitness App'),
-          ),
-          body: const Center(
-            child: AuthenticationWrapper()
-          ),
-        ),
-      )
+      child: const AuthenticationWrapper()
     );
   }
 }
@@ -56,13 +48,13 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   @override
   Widget build(BuildContext context) {
 
-    final User? firebaseUser = context.watch<User?>();
+    User? firebaseUser = context.watch<User?>();
 
     if( firebaseUser != null){
-      return SecondRoute(name: firebaseUser.email);
+      return HomeRoute(name: firebaseUser.email);
     }
     else{
-      return const signupForm();
+      return const SignupForm();
     }
   }
 }

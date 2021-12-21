@@ -1,18 +1,38 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class AuthenticationService {
+
+class AuthenticationService{
   final FirebaseAuth _firebaseAuth;
 
   AuthenticationService(this._firebaseAuth);
 
-  Stream<User?> get authStateChanges => _firebaseAuth.idTokenChanges();
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  String? id(){
-    final User? user = _firebaseAuth.currentUser;
-    final uid = user?.uid;  
-    return uid; 
-  }
+  Future <void> initUser (String firstName, String lastName) async {
+    _firebaseAuth.authStateChanges().listen((User? user) {
+      if (user != null) {
+
+        final usersRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+        usersRef.get().then((DocumentSnapshot documentSnapshot){
+          if(!documentSnapshot.exists){
+            usersRef.set(
+              {
+              "first_name": firstName, 
+              "last_name":  lastName
+              }
+            );
+          }
+        });
+      }
+    }
+  );
+}
+
+
+
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
