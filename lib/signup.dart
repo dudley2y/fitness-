@@ -1,7 +1,5 @@
 import 'dart:js';
-
 import 'package:fitness/authentication_service.dart';
-import 'package:fitness/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,9 +22,7 @@ class _SignupFormState extends State<SignupForm> {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-      home: Scaffold(
-      
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Welcome to My Fitness App'),
         ),
@@ -34,6 +30,9 @@ class _SignupFormState extends State<SignupForm> {
           key: _formKey,
           child: Column(
             children: <Widget>[
+              const Center(
+                child: Text("Sign up "),
+              ),
               TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -140,12 +139,10 @@ class _SignupFormState extends State<SignupForm> {
                     }
                 },
                 child: const Text("Yip Yip"))
-          )
+              )
             ],
-
           )
         ),
-      )
-    );
+      );
   }
 }

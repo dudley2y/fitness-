@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,10 +30,12 @@ class MyApp extends StatelessWidget {
           ),
         StreamProvider(
           create: (context) => context.read<AuthenticationService>().authStateChanges,
-          initialData: FirebaseAuth.instance.currentUser,
+          initialData: null,
           ),
       ],
-      child: const AuthenticationWrapper()
+      child: const MaterialApp(
+        home: AuthenticationWrapper(),
+      )
     );
   }
 }
@@ -54,7 +57,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
       return HomeRoute(name: firebaseUser.email);
     }
     else{
-      return const SignupForm();
+      return const LoginForm();
     }
   }
 }
