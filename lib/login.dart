@@ -16,6 +16,7 @@ class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController(); 
+  final _errorController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +60,22 @@ class _LoginFormState extends State<LoginForm> {
             ),
             Center( 
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+
                   final value = _formKey.currentState!.validate();
 
                   if(value){
                     
-                    context.read<AuthenticationService>().signIn(
+                    String? result = await context.read<AuthenticationService>().signIn(
                       email: _emailController.text.trim(), 
                       password: _passwordController.text.trim()
                     );
 
+                    if(result != "Signed in"){
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar( content: Text(result!))
+                      );
+                    }
                   }
                 },
                 child: const Text("Logged in"),
@@ -86,8 +93,7 @@ class _LoginFormState extends State<LoginForm> {
                   },
                   child: const Text("Create an Account"),
                 ),
-            )
-
+            ),
           ],
         )
       ),

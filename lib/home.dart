@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
 class HomeRoute extends StatelessWidget {
-  const HomeRoute({Key? key, required this.name}) : super(key: key);
-
-  final String? name;
+  const HomeRoute({Key? key}) : super(key: key);
 
     @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class HomeRoute extends StatelessWidget {
         ),
         body: Container(
         child: Column(children: [
-          Text("Welcome to my App, " + name!),
+          const Text("Welcome to my App, "),
           ElevatedButton(
             onPressed: (){
               context.read<AuthenticationService>().signOut();

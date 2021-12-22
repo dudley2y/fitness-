@@ -114,28 +114,37 @@ class _SignupFormState extends State<SignupForm> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 50.0),
               child: ElevatedButton(
-                onPressed: (){
+                onPressed: () async{
                   
                     final value = _formKey.currentState!.validate();
 
                     if(value){
                       
-                      context.read<AuthenticationService>().signUp(
+                      String? result = await context.read<AuthenticationService>().signUp(
                         email: _emailController.text.trim(),
                         password: _passwordController.text.trim()
                       );
 
-                      context.read<AuthenticationService>().initUser(
-                        _firstNameController.text.trim(), 
-                        _lastNameController.text.trim()
-                      );
+                      
+                      if(result != "Signed up"){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar( content: Text(result!))
+                        );
+                      }
 
-                      _firstNameController.text = '';
-                      _lastNameController.text = '';
-                      _emailController.text = '';
-                      _passwordController.text = '';
-                      _rePasswordController.text = '';
-                    
+                      Navigator.pop(context);
+                      // else{
+                      //   context.read<AuthenticationService>().initUser(
+                      //     _firstNameController.text.trim(), 
+                      //     _lastNameController.text.trim()
+                      //   );
+
+                      //   _firstNameController.text = '';
+                      //   _lastNameController.text = '';
+                      //   _emailController.text = '';
+                      //   _passwordController.text = '';
+                      //   _rePasswordController.text = '';
+                      // }  
                     }
                 },
                 child: const Text("Yip Yip"))
