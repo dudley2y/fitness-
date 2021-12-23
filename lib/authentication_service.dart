@@ -31,9 +31,6 @@ class AuthenticationService{
   );
 }
 
-
-
-
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
@@ -43,6 +40,7 @@ class AuthenticationService{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       return "Signed in";
     } on FirebaseAuthException catch (e) {
+      //print(e.message);
       return e.message;
     }
   }

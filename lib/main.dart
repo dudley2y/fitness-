@@ -54,7 +54,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     User? firebaseUser = context.watch<User?>();
 
     if( firebaseUser != null){
-      return HomeRoute(name: firebaseUser.email);
+      return const HomeRoute();
     }
     else{
       return const LoginForm();
