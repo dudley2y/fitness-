@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness/authentication_service.dart';
 import 'package:fitness/signup.dart';
+import 'package:fitness/widgets.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       ],
       child: const MaterialApp(
         home: AuthenticationWrapper(),
+        title: "EEEEEEEEEEEEEEEEEEEEEE",
       )
     );
   }
