@@ -13,9 +13,7 @@ import 'login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -25,25 +23,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(FirebaseAuth.instance)
+        providers: [
+          Provider<AuthenticationService>(
+              create: (_) => AuthenticationService(FirebaseAuth.instance)),
+          StreamProvider(
+            create: (context) =>
+                context.read<AuthenticationService>().authStateChanges,
+            initialData: null,
           ),
-        StreamProvider(
-          create: (context) => context.read<AuthenticationService>().authStateChanges,
-          initialData: null,
-          ),
-      ],
-      child: const MaterialApp(
-        home: AuthenticationWrapper(),
-        title: "EEEEEEEEEEEEEEEEEEEEEE",
-      )
-    );
+        ],
+        child: const MaterialApp(
+          home: AuthenticationWrapper(),
+          title: "s",
+        ));
   }
 }
 
 class AuthenticationWrapper extends StatefulWidget {
-  const AuthenticationWrapper({ Key? key}) : super(key: key);
+  const AuthenticationWrapper({Key? key}) : super(key: key);
 
   @override
   _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
@@ -52,13 +49,11 @@ class AuthenticationWrapper extends StatefulWidget {
 class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   @override
   Widget build(BuildContext context) {
-
     User? firebaseUser = context.watch<User?>();
 
-    if( firebaseUser != null){
+    if (firebaseUser != null) {
       return const HomeRoute();
-    }
-    else{
+    } else {
       return const LoginForm();
     }
   }
