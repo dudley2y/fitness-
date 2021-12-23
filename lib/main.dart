@@ -61,3 +61,17 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     }
   }
 }
+
+
+/* 
+
+1. user to set workouts 
+2. user to be able to hold differnt workouts 
+  aka. 
+    plan a, (push, pull legs); 
+    plan b, (upper, lower);
+
+... analysis and graphs 
+  progress? 
+  */
+

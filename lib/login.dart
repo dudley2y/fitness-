@@ -59,15 +59,23 @@ class _LoginFormState extends State<LoginForm> {
             ),
             Center( 
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async  {
                   final value = _formKey.currentState!.validate();
 
                   if(value){
                     
-                    context.read<AuthenticationService>().signIn(
+                    String? result = await context.read<AuthenticationService>().signIn(
                       email: _emailController.text.trim(), 
                       password: _passwordController.text.trim()
                     );
+
+                    if(result != "Signed in"){
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(result!)
+                        )
+                      );
+                    }
 
                   }
                 },
