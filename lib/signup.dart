@@ -125,24 +125,25 @@ class _SignupFormState extends State<SignupForm> {
                       );
 
                       if(result != "Signed up"){
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(result!)
-                        )
-                      );
-                    }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(result!)
+                          )
+                        );
+                      }
+                      else{
+                        context.read<AuthenticationService>().initUser(
+                          _firstNameController.text.trim(), 
+                          _lastNameController.text.trim()
+                        );
 
-                      context.read<AuthenticationService>().initUser(
-                        _firstNameController.text.trim(), 
-                        _lastNameController.text.trim()
-                      );
-
-                      _firstNameController.text = '';
-                      _lastNameController.text = '';
-                      _emailController.text = '';
-                      _passwordController.text = '';
-                      _rePasswordController.text = '';
-                      Navigator.pop(context);
+                        _firstNameController.text = '';
+                        _lastNameController.text = '';
+                        _emailController.text = '';
+                        _passwordController.text = '';
+                        _rePasswordController.text = '';
+                        Navigator.pop(context);
+                      }
                     }
                 },
                 child: const Text("Yip Yip"))
