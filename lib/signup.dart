@@ -119,7 +119,6 @@ class _SignupFormState extends State<SignupForm> {
                     final value = _formKey.currentState!.validate();
 
                     if(value){
-                      
                       String? result = await context.read<AuthenticationService>().signUp(
                         email: _emailController.text.trim(),
                         password: _passwordController.text.trim()
@@ -143,7 +142,7 @@ class _SignupFormState extends State<SignupForm> {
                       _emailController.text = '';
                       _passwordController.text = '';
                       _rePasswordController.text = '';
-                    
+                      Navigator.pop(context);
                     }
                 },
                 child: const Text("Yip Yip"))
