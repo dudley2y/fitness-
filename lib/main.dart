@@ -52,7 +52,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     User? firebaseUser = context.watch<User?>();
 
     if (firebaseUser != null) {
-      return const HomeRoute();
+      return HomeRoute();
     } else {
       return const LoginForm();
     }

@@ -32,7 +32,9 @@ class WorkoutWidget extends StatefulWidget {
 }
 
 class WorkoutWidgetState extends State {
-  final textController = TextEditingController();
+  final exerciseCont = TextEditingController();
+  final descCont = TextEditingController();
+
   List<ExerciseWidget> exercises = [
     ExerciseWidget(title: 'today', desc: 'nothin')
   ];
@@ -54,26 +56,36 @@ class WorkoutWidgetState extends State {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(children: [
-        ListView.builder(
-          itemBuilder: (_, index) => at(index),
-          itemCount: exercises.length,
-          shrinkWrap: true,
-        ),
-        ElevatedButton(
-            onPressed: () {
-              setState(() {
-                addExcercise(ExerciseWidget(
-                  title: textController.text,
-                  desc: '!1',
-                ));
-              });
-            },
-            child: const Text("Add New")),
-        TextField(
-          controller: textController,
-        ),
-      ]),
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListView.builder(
+              itemBuilder: (_, index) => at(index),
+              itemCount: exercises.length,
+              shrinkWrap: true,
+            ),
+            // GridView.count(
+            //   shrinkWrap: true,
+            //   crossAxisCount: 2,
+            //   // mainAxisSpacing: 4.0,
+            //   // crossAxisSpacing: 4.0,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   children: const [Text('1'), Text('2'), Text('3'), Text('4')],
+            // ),
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    addExcercise(ExerciseWidget(
+                      title: exerciseCont.text,
+                      desc: descCont.text,
+                    ));
+                    exerciseCont.clear();
+                    descCont.clear();
+                  });
+                },
+                child: const Text("Add New")),
+          ]),
     );
   }
 }
@@ -88,11 +100,11 @@ class WorkoutWidget1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           vertical: 32.0,
           horizontal: 24.0,
         ),
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           bottom: 20.0,
         ),
         decoration: BoxDecoration(
@@ -102,18 +114,18 @@ class WorkoutWidget1 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title ?? "Custom_Exercise",
-                style: TextStyle(
+            Text(title,
+                style: const TextStyle(
                   color: Colors.red,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 )),
             Padding(
-                padding: EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 10.0),
                 child: Text(
                   // desc ?? sets.toString() + " x " + reps.toString(),
-                  desc ?? "example description",
-                  style: TextStyle(
+                  desc,
+                  style: const TextStyle(
                     fontSize: 14.0,
                     color: Colors.green,
                     height: 1.5,
