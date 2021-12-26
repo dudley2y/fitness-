@@ -1,5 +1,6 @@
 import 'package:fitness/authentication_service.dart';
-import 'package:fitness/widgets.dart';
+import 'package:fitness/dynamiclist.dart';
+import 'package:fitness/mywidgets.dart';
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
@@ -16,9 +17,10 @@ class HomeRoute extends StatelessWidget {
       home: Scaffold(
           appBar: AppBar(
             title: const Text(
-                'Welcome to My Fitness App but you are logged in now!'),
+                'Schedule for ${getDay()}'),
           ),
-          body: SafeArea(
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
               child: Container(
                   width: double.infinity,
                   padding:

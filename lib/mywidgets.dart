@@ -53,7 +53,8 @@ class WorkoutWidgetState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
+      height:  450,
       child: Column(children: [
         ListView.builder(
           itemBuilder: (_, index) => at(index),
