@@ -4,47 +4,64 @@ import 'package:fitness/mywidgets.dart';
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:fitness/schedule.dart';
 
-class HomeRoute extends StatelessWidget {
-  const HomeRoute({Key? key}) : super(key: key);
+class HomeRoute extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() => new _HomeRoute();
+}
+
+class _HomeRoute extends State<HomeRoute> {
+  List<Widget> workoutList = [];
+  final TextEditingController eCtrl = new TextEditingController();
+
+
+  ElevatedButton addWorkoutButton = ElevatedButton(
+    onPressed: () {},
+    child: const Text('1'),
+  );
+
   void logout(BuildContext context) {
     context.read<AuthenticationService>().signOut();
   }
 
+  String getDay() {
+    return DateFormat('EEEE').format(DateTime.now());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text(
-                'Schedule for ${getDay()}'),
+    addWorkoutButton = ElevatedButton(
+        onPressed: () {
+          workoutList.add(const Text('sup'));
+          (context as Element).reassemble();
+        },
+        child: const Text('HALLO'));
+    return Scaffold(
+      appBar: AppBar(title : Text('Schedule for ${getDay()}')),
+      body: new Column(
+        children: <Widget>[
+          TextField(
+            controller: eCtrl,
+            onSubmitted: (text){
+              if(text.length > 0){
+                workoutList.add(new ExerciseWidget(title: eCtrl.text,desc: eCtrl.text));
+                eCtrl.clear();
+                setState(() {});
+              }
+            },
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-              child: Container(
-                  width: double.infinity,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 0.0, vertical: 32.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Welcome to my App, "),
-                      ElevatedButton(
-                          onPressed: () {
-                            logout(context);
-                          },
-                          child: const Text("Log out")),
-                      Container(child: WorkoutWidget()),
-                    ],
-                  )))),
+          Expanded(
+            child:ListView.builder(
+              itemCount: workoutList.length,
+              itemBuilder: (BuildContext context,int indx){
+                return workoutList[indx];
+              },
+            )
+          ),
+          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
+        ],
+      )
     );
-  }
-}
-/**
- * child: Column(
-              children: [
-                
-                WorkoutWidget(title: 'hello', desc: 'world'),
-              ],
-            ),
- */
+    }}

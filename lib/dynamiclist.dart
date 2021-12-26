@@ -10,7 +10,7 @@ class DyanmicList extends State<ListDisplay> {
   final TextEditingController eCtrl = new TextEditingController();
   @override
   Widget build (BuildContext ctxt) {
-    return new Scaffold(
+    return new Scaffold(  
       appBar: new AppBar(title: new Text("Dynamic Demo"),),
       body: new Column(
         children: <Widget>[

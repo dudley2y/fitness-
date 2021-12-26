@@ -32,7 +32,9 @@ class WorkoutWidget extends StatefulWidget {
 }
 
 class WorkoutWidgetState extends State {
-  final textController = TextEditingController();
+  final exerciseCont = TextEditingController();
+  final descCont = TextEditingController();
+
   List<ExerciseWidget> exercises = [
     ExerciseWidget(title: 'today', desc: 'nothin')
   ];
@@ -40,7 +42,6 @@ class WorkoutWidgetState extends State {
   // returns this
   void addExcercise(ExerciseWidget ew) {
     exercises.add(ew);
-    print(exercises);
   }
 
   List<Widget> _getExcercises() {
@@ -65,14 +66,14 @@ class WorkoutWidgetState extends State {
             onPressed: () {
               setState(() {
                 addExcercise(ExerciseWidget(
-                  title: textController.text,
+                  title: exerciseCont.text,
                   desc: '!1',
                 ));
               });
             },
             child: const Text("Add New")),
         TextField(
-          controller: textController,
+          controller: exerciseCont,
         ),
       ]),
     );
@@ -89,11 +90,11 @@ class WorkoutWidget1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           vertical: 32.0,
           horizontal: 24.0,
         ),
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           bottom: 20.0,
         ),
         decoration: BoxDecoration(
@@ -103,18 +104,18 @@ class WorkoutWidget1 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title ?? "Custom_Exercise",
-                style: TextStyle(
+            Text(title,
+                style: const TextStyle(
                   color: Colors.red,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 )),
             Padding(
-                padding: EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 10.0),
                 child: Text(
                   // desc ?? sets.toString() + " x " + reps.toString(),
-                  desc ?? "example description",
-                  style: TextStyle(
+                  desc,
+                  style: const TextStyle(
                     fontSize: 14.0,
                     color: Colors.green,
                     height: 1.5,
