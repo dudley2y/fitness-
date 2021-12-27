@@ -1,4 +1,5 @@
 import 'package:fitness/actionbutton.dart';
+import 'package:fitness/addNewWorkout.dart';
 import 'package:fitness/authentication_service.dart';
 // import 'package:fitness/dynamiclist.dart';
 import 'package:fitness/mywidgets.dart';
@@ -16,20 +17,7 @@ class HomeRoute extends StatefulWidget{
 }
 
 class _HomeRoute extends State<HomeRoute> {
-  List<Widget> workoutList = [];
-  FloatingActionButton fabMainButton = FloatingActionButton(onPressed: ()=>print('pressed main'));
- 
-void _showAction(BuildContext context, int i){
-  print('you sent $i');
-}
-final TextEditingController eCtrl = TextEditingController();
-
-
-  ElevatedButton addWorkoutButton = ElevatedButton(
-    onPressed: () {},
-    child: const Text('1'),
-  );
-
+  
   void logout(BuildContext context) {
     context.read<AuthenticationService>().signOut();
   }
@@ -40,12 +28,6 @@ final TextEditingController eCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    addWorkoutButton = ElevatedButton(
-        onPressed: () {
-          workoutList.add(const Text('sup'));
-          (context as Element).reassemble();
-        },
-        child: const Text('HALLO'));
     return Scaffold(
       appBar: AppBar(title : Text('Schedule for ${getDay()}')),
       floatingActionButton: ExpandableFab(
@@ -53,7 +35,12 @@ final TextEditingController eCtrl = TextEditingController();
         children: [ // sub buttons from main FAB
           ActionButton(
             icon: const Icon(Icons.add_circle_outlined),
-            onPressed: (){},
+            onPressed: () => Navigator.push( 
+                              context, 
+                              MaterialPageRoute(
+                                builder: (context) => const AddNewWorkout()
+                              )
+                            )
           ),
           ActionButton(
             icon: const Icon(Icons.edit),
@@ -61,28 +48,6 @@ final TextEditingController eCtrl = TextEditingController();
           )
         ]
       ),
-      body: Column(
-        children: <Widget>[
-          TextField(
-            controller: eCtrl,
-            onSubmitted: (text){
-              if(text.isNotEmpty){
-                workoutList.add(ExerciseWidget(title: eCtrl.text,desc: eCtrl.text));
-                eCtrl.clear();
-                setState(() {});
-              }
-            },
-          ),
-          Expanded(
-            child:ListView.builder(
-              itemCount: workoutList.length,
-              itemBuilder: (BuildContext context,int indx){
-                return workoutList[indx];
-              },
-            )
-          ),
-          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
-        ],
-      )
-    );
+      body: Text("Nothing here, plz add workout")
+     );
     }}
