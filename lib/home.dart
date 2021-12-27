@@ -2,13 +2,20 @@ import 'package:fitness/actionbutton.dart';
 import 'package:fitness/addNewWorkout.dart';
 import 'package:fitness/authentication_service.dart';
 // import 'package:fitness/dynamiclist.dart';
-import 'package:fitness/mywidgets.dart';
+// import 'package:fitness/mywidgets.dart';
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:fitness/expandablefab.dart';
+import 'package:fitness/makeABetterName.dart';
 // import 'dart:math' as math;
+import 'package:fitness/globals.dart';
+import 'package:fitness/mywidgets.dart';
+
+
+
+
 class HomeRoute extends StatefulWidget{
   const HomeRoute({Key? key}) : super(key: key);
 
@@ -35,19 +42,36 @@ class _HomeRoute extends State<HomeRoute> {
         children: [ // sub buttons from main FAB
           ActionButton(
             icon: const Icon(Icons.add_circle_outlined),
-            onPressed: () => Navigator.push( 
+            onPressed: () async {await Navigator.push( 
                               context, 
                               MaterialPageRoute(
                                 builder: (context) => const AddNewWorkout()
                               )
-                            )
+                            );
+                            setState(() {});
+                            }
           ),
           ActionButton(
             icon: const Icon(Icons.edit),
-            onPressed: (){} ,  
+            onPressed: (){print(excerciseMeta.length); setState(() {
+              
+            });} ,  
           )
         ]
       ),
-      body: Text("Nothing here, plz add workout")
-     );
-    }}
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child:ListView.builder(
+              itemCount: excerciseMeta.length,
+              itemBuilder: (BuildContext context,int indx){
+                return ExerciseWidget(title: excerciseMeta[indx].name,desc: excerciseMeta[indx].set + ' x ' + excerciseMeta[indx].rep);
+              },
+            )
+          ),
+          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
+        ],
+      ),
+    );
+  }
+}

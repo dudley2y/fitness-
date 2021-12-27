@@ -1,6 +1,11 @@
+import 'dart:html';
+
+import 'package:fitness/makeABetterName.dart';
 import 'package:flutter/material.dart';
 
 import 'mywidgets.dart';
+
+import 'package:fitness/globals.dart';
 
 class AddNewWorkout extends StatefulWidget {
   const AddNewWorkout({ Key? key }) : super(key: key);
@@ -27,9 +32,12 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
         children: <Widget>[
           TextField(
             controller: eCtrl,
+            // add submit button, so we can have multiple text feilds, 
+            //one for workout name, another for sets, reps, and will need to add autofill/dropdown
             onSubmitted: (text){
               if(text.isNotEmpty){
                 workoutList.add(ExerciseWidget(title: eCtrl.text,desc: eCtrl.text));
+                excerciseMeta.add(ExcerciseMeta(name:eCtrl.text,rep:eCtrl.text, set: eCtrl.text, notes: 'none so far',done:false));
                 eCtrl.clear();
                 setState(() {});
               }
