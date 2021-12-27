@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:fitness/expandablefab.dart';
 
 class ExerciseWidget extends StatelessWidget {
-  String title;
-  String desc;
-  ExerciseWidget({this.title = 'Exercise', this.desc = 'Plan'});
+  final String title;
+  final String desc;
+  const ExerciseWidget({
+    Key? key,  
+    required this.title, 
+    required this.desc
+    }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     // String title;
     // String desc;
     return Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 5.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
         decoration: BoxDecoration(
             color: Colors.blue[200], borderRadius: BorderRadius.circular(20)),
         child: Column(children: [
           Text(
-            title ?? 'Today',
-            style: TextStyle(height: 1.5),
+            title,
+            style: const TextStyle(height: 1.5),
           ),
           Text(
-            desc ?? 'Plan',
-            style: TextStyle(height: 1.5),
+            desc,
+            style: const TextStyle(height: 1.5),
           ),
         ]));
   }
