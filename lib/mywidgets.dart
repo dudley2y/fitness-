@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:fitness/expandablefab.dart';
 
 class ExerciseWidget extends StatelessWidget {
-  String title;
-  String desc;
-  ExerciseWidget({Key? key, this.title = 'Exercise', this.desc = 'Plan'}) : super(key: key);
+  final String title;
+  final String desc;
+  const ExerciseWidget({
+    Key? key,  
+    required this.title, 
+    required this.desc
+    }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     // String title;
     // String desc;
     return Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 5.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
         decoration: BoxDecoration(
             color: Colors.blue[200], borderRadius: BorderRadius.circular(20)),
         child: Column(children: [
           Text(
-            title ?? 'Today',
-            style: TextStyle(height: 1.5),
+            title,
+            style: const TextStyle(height: 1.5),
           ),
           Text(
-            desc ?? 'Plan',
-            style: TextStyle(height: 1.5),
+            desc,
+            style: const TextStyle(height: 1.5),
           ),
         ]));
   }
@@ -32,7 +37,9 @@ class WorkoutWidget extends StatefulWidget {
 }
 
 class WorkoutWidgetState extends State {
-  final textController = TextEditingController();
+  final exerciseCont = TextEditingController();
+  final descCont = TextEditingController();
+
   List<ExerciseWidget> exercises = [
     ExerciseWidget(title: 'today', desc: 'nothin')
   ]; 
@@ -40,7 +47,6 @@ class WorkoutWidgetState extends State {
   // returns this
   void addExcercise(ExerciseWidget ew) {
     exercises.add(ew);
-    print(exercises);
   }
 
   List<Widget> _getExcercises() {
@@ -53,7 +59,8 @@ class WorkoutWidgetState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
+      height:  450,
       child: Column(children: [
         ListView.builder(
           itemBuilder: (_, index) => at(index),
@@ -64,14 +71,14 @@ class WorkoutWidgetState extends State {
             onPressed: () {
               setState(() {
                 addExcercise(ExerciseWidget(
-                  title: textController.text,
+                  title: exerciseCont.text,
                   desc: '!1',
                 ));
               });
             },
             child: const Text("Add New")),
         TextField(
-          controller: textController,
+          controller: exerciseCont,
         ),
       ]),
     );
@@ -88,11 +95,11 @@ class WorkoutWidget1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           vertical: 32.0,
           horizontal: 24.0,
         ),
-        margin: EdgeInsets.only(
+        margin: const EdgeInsets.only(
           bottom: 20.0,
         ),
         decoration: BoxDecoration(
@@ -102,18 +109,18 @@ class WorkoutWidget1 extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title ?? "Custom_Exercise",
-                style: TextStyle(
+            Text(title,
+                style: const TextStyle(
                   color: Colors.red,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                 )),
             Padding(
-                padding: EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 10.0),
                 child: Text(
                   // desc ?? sets.toString() + " x " + reps.toString(),
-                  desc ?? "example description",
-                  style: TextStyle(
+                  desc,
+                  style: const TextStyle(
                     fontSize: 14.0,
                     color: Colors.green,
                     height: 1.5,

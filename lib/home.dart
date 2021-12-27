@@ -1,74 +1,84 @@
-import 'dart:js';
-
+import 'package:fitness/actionbutton.dart';
 import 'package:fitness/authentication_service.dart';
-import 'package:fitness/editExercise.dart';
-import 'package:fitness/widgets.dart';
+// import 'package:fitness/dynamiclist.dart';
+import 'package:fitness/mywidgets.dart';
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
-
-class HomeRoute extends StatelessWidget {
+import 'package:intl/intl.dart';
+import 'package:fitness/expandablefab.dart';
+// import 'dart:math' as math;
+class HomeRoute extends StatefulWidget{
   const HomeRoute({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _HomeRoute();
+}
+
+class _HomeRoute extends State<HomeRoute> {
+  List<Widget> workoutList = [];
+  FloatingActionButton fabMainButton = FloatingActionButton(onPressed: ()=>print('pressed main'));
+ 
+void _showAction(BuildContext context, int i){
+  print('you sent $i');
+}
+  ExpandableFab fab = ExpandableFab(
+    distance: 112,
+    children: [ // sub buttons from main FAB
+      ActionButton(icon: Icon(Icons.add_circle_outlined),
+      onPressed: () => print('+'),
+      )
+    ]
+    );
+  final TextEditingController eCtrl = TextEditingController();
+
+
+  ElevatedButton addWorkoutButton = ElevatedButton(
+    onPressed: () {},
+    child: const Text('1'),
+  );
+
   void logout(BuildContext context) {
     context.read<AuthenticationService>().signOut();
   }
 
+  String getDay() {
+    return DateFormat('EEEE').format(DateTime.now());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text(
-                'Welcome to My Fitness App but you are logged in now!'),
+    addWorkoutButton = ElevatedButton(
+        onPressed: () {
+          workoutList.add(const Text('sup'));
+          (context as Element).reassemble();
+        },
+        child: const Text('HALLO'));
+    return Scaffold(
+      appBar: AppBar(title : Text('Schedule for ${getDay()}')),
+      floatingActionButton: fab,
+      body: Column(
+        children: <Widget>[
+          TextField(
+            controller: eCtrl,
+            onSubmitted: (text){
+              if(text.isNotEmpty){
+                workoutList.add(ExerciseWidget(title: eCtrl.text,desc: eCtrl.text));
+                eCtrl.clear();
+                setState(() {});
+              }
+            },
           ),
-          body: Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  logout(context);
-                },
-                child: const Text("Log out")
-              )
-            ]
+          Expanded(
+            child:ListView.builder(
+              itemCount: workoutList.length,
+              itemBuilder: (BuildContext context,int indx){
+                return workoutList[indx];
+              },
+            )
           ),
-          floatingActionButton: ExpandableFab(
-                distance: 112, 
-                children: [
-                  ActionButton(
-                  onPressed: () => {},
-                  icon: const Icon(Icons.format_size),
-                ),
-                ActionButton(
-                  onPressed: () => {},
-                  icon: const Icon(Icons.insert_photo),
-                ),
-                ActionButton(
-                  onPressed: () => {},
-                  icon: const Icon(Icons.videocam),
-                ),
-                ]
-              ),
-        ) 
-
-
-
-
-          // body: SafeArea(
-          //     child: Container(
-          //         width: 720,
-              
-          //         padding:
-          //             EdgeInsets.symmetric(horizontal: 0.0, vertical: 32.0),
-          //         child: Column(
-          //           crossAxisAlignment: CrossAxisAlignment.center,
-          //           children: [
-          //             
-          //             const ExampleExpandableFab()
-          //           ],
-          //         )
-          //       )
-          //     ),
-          //body: ExampleExpandableFab(),
-          );
-        }
-      }
+          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
+        ],
+      )
+    );
+    }}
