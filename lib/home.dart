@@ -13,10 +13,7 @@ import 'package:fitness/makeABetterName.dart';
 import 'package:fitness/globals.dart';
 import 'package:fitness/mywidgets.dart';
 
-
-
-
-class HomeRoute extends StatefulWidget{
+class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
 
   @override
@@ -24,7 +21,6 @@ class HomeRoute extends StatefulWidget{
 }
 
 class _HomeRoute extends State<HomeRoute> {
-  
   void logout(BuildContext context) {
     context.read<AuthenticationService>().signOut();
   }
@@ -36,39 +32,37 @@ class _HomeRoute extends State<HomeRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title : Text('Schedule for ${getDay()}')),
-      floatingActionButton: ExpandableFab(
-        distance: 112,
-        children: [ // sub buttons from main FAB
-          ActionButton(
+      appBar: AppBar(title: Text('Schedule for ${getDay()}')),
+      floatingActionButton: ExpandableFab(distance: 112, children: [
+        // sub buttons from main FAB
+        ActionButton(
             icon: const Icon(Icons.add_circle_outlined),
-            onPressed: () async {await Navigator.push( 
-                              context, 
-                              MaterialPageRoute(
-                                builder: (context) => const AddNewWorkout()
-                              )
-                            );
-                            setState(() {});
-                            }
-          ),
-          ActionButton(
-            icon: const Icon(Icons.edit),
-            onPressed: (){print(excerciseMeta.length); setState(() {
-              
-            });} ,  
-          )
-        ]
-      ),
+            onPressed: () async {
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddNewWorkout()));
+              setState(() {});
+            }),
+        ActionButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () {
+            print(excerciseMeta.length);
+            setState(() {});
+          },
+        )
+      ]),
       body: Column(
         children: <Widget>[
           Expanded(
-            child:ListView.builder(
-              itemCount: excerciseMeta.length,
-              itemBuilder: (BuildContext context,int indx){
-                return ExerciseWidget(title: excerciseMeta[indx].name,desc: excerciseMeta[indx].set + ' x ' + excerciseMeta[indx].rep);
-              },
-            )
-          ),
+              child: ListView.builder(
+            itemCount: excerciseMeta.length,
+            itemBuilder: (BuildContext context, int indx) {
+              return ExerciseWidget(
+                  title: excerciseMeta[indx].name,
+                  desc: excerciseMeta[indx].set);
+            },
+          )),
           // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
         ],
       ),
