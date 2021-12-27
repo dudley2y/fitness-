@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ExerciseWidget extends StatelessWidget {
   String title;
   String desc;
-  ExerciseWidget({this.title = 'Exercise', this.desc = 'Plan'});
+  ExerciseWidget({Key? key, this.title = 'Exercise', this.desc = 'Plan'}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     // String title;
@@ -35,7 +35,7 @@ class WorkoutWidgetState extends State {
   final textController = TextEditingController();
   List<ExerciseWidget> exercises = [
     ExerciseWidget(title: 'today', desc: 'nothin')
-  ];
+  ]; 
   //add new excercise ew to list
   // returns this
   void addExcercise(ExerciseWidget ew) {
