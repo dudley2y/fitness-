@@ -22,15 +22,7 @@ class _HomeRoute extends State<HomeRoute> {
 void _showAction(BuildContext context, int i){
   print('you sent $i');
 }
-  ExpandableFab fab = ExpandableFab(
-    distance: 112,
-    children: [ // sub buttons from main FAB
-      ActionButton(icon: Icon(Icons.add_circle_outlined),
-      onPressed: () => print('+'),
-      )
-    ]
-    );
-  final TextEditingController eCtrl = TextEditingController();
+final TextEditingController eCtrl = TextEditingController();
 
 
   ElevatedButton addWorkoutButton = ElevatedButton(
@@ -56,7 +48,19 @@ void _showAction(BuildContext context, int i){
         child: const Text('HALLO'));
     return Scaffold(
       appBar: AppBar(title : Text('Schedule for ${getDay()}')),
-      floatingActionButton: fab,
+      floatingActionButton: ExpandableFab(
+        distance: 112,
+        children: [ // sub buttons from main FAB
+          ActionButton(
+            icon: const Icon(Icons.add_circle_outlined),
+            onPressed: (){},
+          ),
+          ActionButton(
+            icon: const Icon(Icons.edit),
+            onPressed: (){} ,  
+          )
+        ]
+      ),
       body: Column(
         children: <Widget>[
           TextField(
