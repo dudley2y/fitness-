@@ -40,6 +40,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
                 excerciseMeta.add(ExcerciseMeta(name:eCtrl.text,rep:eCtrl.text, set: eCtrl.text, notes: 'none so far',done:false));
                 eCtrl.clear();
                 setState(() {});
+                Navigator.pop(context);
               }
             },
           ),
