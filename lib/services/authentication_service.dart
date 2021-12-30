@@ -1,36 +1,13 @@
-import 'dart:js';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-
+import 'package:fitness/services/database_serive.dart';
 
 class AuthenticationService{
   final FirebaseAuth _firebaseAuth;
 
   AuthenticationService(this._firebaseAuth);
 
-  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+  Stream<User?> get user =>  _firebaseAuth.authStateChanges();
 
-  Future <void> initUser (String firstName, String lastName) async {
-    _firebaseAuth.authStateChanges().listen((User? user) {
-      if (user != null) {
-
-        final usersRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
-
-        usersRef.get().then((DocumentSnapshot documentSnapshot){
-          if(!documentSnapshot.exists){
-            usersRef.set(
-              {
-              "first_name": firstName, 
-              "last_name":  lastName
-              }
-            );
-          }
-        });
-      }
-    });
-  }
 
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
@@ -46,9 +23,10 @@ class AuthenticationService{
     }
   }
 
-  Future<String?> signUp({required String email, required String password}) async {
+  Future<String?> signUp({required String email, required String password, required first, required last}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await DatabaseService(uid: result.user!.uid).initUser(first, last);
       return "Signed up";
     } on FirebaseAuthException catch (e) {
       return e.message;

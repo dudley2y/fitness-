@@ -7,7 +7,6 @@ import 'package:fitness/services/authentication_service.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -17,15 +16,17 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  @override
+  @override 
   Widget build(BuildContext context) {
+
     return MultiProvider(
-        providers: [
+      providers: [
           Provider<AuthenticationService>(
-              create: (_) => AuthenticationService(FirebaseAuth.instance)),
+              create: (_) => AuthenticationService(FirebaseAuth.instance)
+          ),
           StreamProvider(
             create: (context) =>
-                context.read<AuthenticationService>().authStateChanges,
+                context.read<AuthenticationService>().user,
             initialData: null,
           ),
         ],

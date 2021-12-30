@@ -1,11 +1,11 @@
-import 'dart:js';
 import 'package:fitness/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'signup.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({ Key? key }) : super(key: key);
+  const LoginForm({ Key? key, required this.toggleView }) : super(key: key);
+
+  final Function toggleView; 
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -84,17 +84,11 @@ class _LoginFormState extends State<LoginForm> {
             Center( 
               child: ElevatedButton(
                 onPressed: (){
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(
-                      builder: (context) => const SignupForm()
-                      )
-                    );
+                  widget.toggleView();
                   },
                   child: const Text("Create an Account"),
                 ),
             )
-
           ],
         )
       ),

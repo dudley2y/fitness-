@@ -1,10 +1,11 @@
-import 'dart:js';
 import 'package:fitness/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SignupForm extends StatefulWidget {
-  const SignupForm({ Key? key }) : super(key: key);
+  const SignupForm({ Key? key, required this.toggleView }) : super(key: key);
+
+  final Function toggleView; 
 
   @override
   _SignupFormState createState() => _SignupFormState();
@@ -111,17 +112,26 @@ class _SignupFormState extends State<SignupForm> {
               ),
               controller: _rePasswordController,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50.0),
-              child: ElevatedButton(
-                onPressed: () async {
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  child: const Text("Go back"),
+                  onPressed: (){
+                    widget.toggleView();
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () async {
                   
                     final value = _formKey.currentState!.validate();
 
                     if(value){
                       String? result = await context.read<AuthenticationService>().signUp(
                         email: _emailController.text.trim(),
-                        password: _passwordController.text.trim()
+                        password: _passwordController.text.trim(),
+                        first: _firstNameController.text.trim(),
+                        last: _lastNameController.text.trim()
                       );
 
                       if(result != "Signed up"){
@@ -131,26 +141,24 @@ class _SignupFormState extends State<SignupForm> {
                           )
                         );
                       }
-                      else{
-                        context.read<AuthenticationService>().initUser(
-                          _firstNameController.text.trim(), 
-                          _lastNameController.text.trim()
-                        );
-
+                      else{  
                         _firstNameController.text = '';
                         _lastNameController.text = '';
                         _emailController.text = '';
                         _passwordController.text = '';
                         _rePasswordController.text = '';
-                        Navigator.pop(context);
+                        
+                        widget.toggleView();
                       }
                     }
-                },
-                child: const Text("Yip Yip"))
-              )
-            ],
+                  },
+                  child: const Text("Yip Yip")
+                )
+              ]
+            )
+            ]
           )
-        ),
+        )
       );
   }
 }
