@@ -1,4 +1,4 @@
-import 'package:fitness/makeABetterName.dart';
+import 'package:fitness/models/makeABetterName.dart';
 List<ExcerciseMeta> excerciseMeta = [];
 
 /**

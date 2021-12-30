@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fitness/expandablefab.dart';
+import 'package:fitness/screens/home/homeFab/expandablefab.dart';
 
 class ExerciseWidget extends StatefulWidget {
   String title, desc;

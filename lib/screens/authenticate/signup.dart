@@ -1,5 +1,5 @@
 import 'dart:js';
-import 'package:fitness/authentication_service.dart';
+import 'package:fitness/services/authentication_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

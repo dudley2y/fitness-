@@ -1,17 +1,18 @@
-import 'package:fitness/actionbutton.dart';
-import 'package:fitness/addNewWorkout.dart';
-import 'package:fitness/authentication_service.dart';
+import 'package:fitness/screens/home/homeFab/actionbutton.dart';
+import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
+import 'package:fitness/services/authentication_service.dart';
+import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editWorkout.dart';
 // import 'package:fitness/dynamiclist.dart';
 // import 'package:fitness/mywidgets.dart';
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:fitness/expandablefab.dart';
-import 'package:fitness/makeABetterName.dart';
+import 'package:fitness/screens/home/homeFab/expandablefab.dart';
+import 'package:fitness/models/makeABetterName.dart';
 // import 'dart:math' as math;
-import 'package:fitness/globals.dart';
-import 'package:fitness/mywidgets.dart';
+import 'package:fitness/screens/home/globals.dart';
+import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -47,8 +48,10 @@ class _HomeRoute extends State<HomeRoute> {
         ActionButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
-            print(excerciseMeta.length);
-            setState(() {});
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EditWorkout()));
           },
         )
       ]),

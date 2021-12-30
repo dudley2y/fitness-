@@ -1,11 +1,11 @@
 import 'dart:html';
 
-import 'package:fitness/makeABetterName.dart';
+import 'package:fitness/models/makeABetterName.dart';
 import 'package:flutter/material.dart';
 
-import 'mywidgets.dart';
+import 'exerciseWidget.dart';
 
-import 'package:fitness/globals.dart';
+import 'package:fitness/screens/home/globals.dart';
 
 class AddNewWorkout extends StatefulWidget {
   const AddNewWorkout({Key? key}) : super(key: key);
