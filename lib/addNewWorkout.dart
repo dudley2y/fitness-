@@ -8,7 +8,7 @@ import 'mywidgets.dart';
 import 'package:fitness/globals.dart';
 
 class AddNewWorkout extends StatefulWidget {
-  const AddNewWorkout({ Key? key }) : super(key: key);
+  const AddNewWorkout({Key? key}) : super(key: key);
 
   @override
   _AddNewWorkoutState createState() => _AddNewWorkoutState();
@@ -16,8 +16,12 @@ class AddNewWorkout extends StatefulWidget {
 
 class _AddNewWorkoutState extends State<AddNewWorkout> {
   List<Widget> workoutList = [];
-  final TextEditingController eCtrl = TextEditingController();
-  FloatingActionButton fabMainButton = FloatingActionButton(onPressed: ()=>print('pressed main'));
+  final TextEditingController excersizeNameCtl =
+      TextEditingController(text: 'Excercise Name Here');
+  final TextEditingController setCtl = TextEditingController(text: 'Sets');
+  final TextEditingController repCtl = TextEditingController(text: 'Reps');
+  FloatingActionButton fabMainButton =
+      FloatingActionButton(onPressed: () => print('pressed main'));
 
   ElevatedButton addWorkoutButton = ElevatedButton(
     onPressed: () {},
@@ -26,35 +30,65 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
 
   @override
   Widget build(BuildContext context) {
+    String name = '', reps = '', sets = '';
     return Scaffold(
-      appBar: AppBar(title : const Text('Adding workout!')),
+      appBar: AppBar(title: const Text('Adding workout!')),
       body: Column(
         children: <Widget>[
           TextField(
-            controller: eCtrl,
-            // add submit button, so we can have multiple text feilds, 
+            controller: excersizeNameCtl,
+            onTap: () => excersizeNameCtl.clear(),
+            // add submit button, so we can have multiple text feilds,
             //one for workout name, another for sets, reps, and will need to add autofill/dropdown
-            onSubmitted: (text){
-              if(text.isNotEmpty){
-                workoutList.add(ExerciseWidget(title: eCtrl.text,desc: eCtrl.text));
-                excerciseMeta.add(ExcerciseMeta(name:eCtrl.text,rep:eCtrl.text, set: eCtrl.text, notes: 'none so far',done:false));
-                eCtrl.clear();
-                setState(() {});
-                Navigator.pop(context);
+            onSubmitted: (text) {
+              if (text.isNotEmpty) {
+                name = excersizeNameCtl.text;
               }
             },
           ),
-          Expanded(
-            child:ListView.builder(
-              itemCount: workoutList.length,
-              itemBuilder: (BuildContext context,int indx){
-                return workoutList[indx];
-              },
-            )
+          TextField(
+            controller: setCtl,
+            onTap: () => setCtl.clear(),
+            // add submit button, so we can have multiple text feilds,
+            //one for workout name, another for sets, reps, and will need to add autofill/dropdown
+            onSubmitted: (text) {
+              if (text.isNotEmpty) {
+                sets = setCtl.text;
+              }
+            },
           ),
+          TextField(
+            controller: repCtl,
+            onTap: () => repCtl.clear(),
+            // add submit button, so we can have multiple text feilds,
+            //one for workout name, another for sets, reps, and will need to add autofill/dropdown
+            onSubmitted: (text) {
+              reps = repCtl.text;
+            },
+          ),
+
+          ElevatedButton(
+              onPressed: () {
+                workoutList.add(ExerciseWidget(title: name, desc: reps));
+                excerciseMeta.add(ExcerciseMeta(
+                    name: excersizeNameCtl.text,
+                    rep: repCtl.text,
+                    set: setCtl.text,
+                    notes: 'none so far',
+                    done: false));
+                excersizeNameCtl.clear();
+                setState(() {});
+                Navigator.pop(context);
+              },
+              child: const Text('Add Workout!')),
           // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
         ],
       ),
     );
   }
 }
+
+
+/** 
+ * use validator in leiu of controllers, see signup
+ */

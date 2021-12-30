@@ -69,3 +69,7 @@ class _HomeRoute extends State<HomeRoute> {
     );
   }
 }
+
+/**
+ * Next up: make each 'ExerciseWidget' clickable, so it expands, showing a description and allowing edits
+ */
