@@ -5,11 +5,13 @@ class DatabaseService {
 
   final uid;
 
+
   DatabaseService({this.uid});
 
 
   final CollectionReference users_ref = FirebaseFirestore.instance.collection('users');
-  final CollectionReference user_splits_ref = FirebaseFirestore.instance.collection('user_splits');
+  final CollectionReference users_splits_ref = FirebaseFirestore.instance.collection('users_splits');
+  final CollectionReference users_splits_names_ref = FirebaseFirestore.instance.collection('users_splits_names');
 
   Future <void> initUser (String firstName, String lastName) async {
     
@@ -22,5 +24,8 @@ class DatabaseService {
       }
     );
   }
-  
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getUserSplits() async {
+    return users_splits_names_ref.doc(uid).collection("names").get();
+  }
 }
