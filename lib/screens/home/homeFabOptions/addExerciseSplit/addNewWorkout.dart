@@ -21,7 +21,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
   final TextEditingController setCtl = TextEditingController(text: 'Sets');
   final TextEditingController repCtl = TextEditingController(text: 'Reps');
   FloatingActionButton fabMainButton =
-      FloatingActionButton(onPressed: () => print('pressed main'));
+      FloatingActionButton(onPressed: () => {});
 
   ElevatedButton addWorkoutButton = ElevatedButton(
     onPressed: () {},
@@ -69,8 +69,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
 
           ElevatedButton(
               onPressed: () {
-                workoutList.add(ExerciseWidget(title: name, desc: reps));
-                excerciseMeta.add(ExcerciseMeta(
+                dailyExcerciseMeta[viewDay].add(ExcerciseMeta(
                     name: excersizeNameCtl.text,
                     rep: repCtl.text,
                     set: setCtl.text,
