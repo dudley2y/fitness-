@@ -1,15 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
 import 'package:fitness/services/authentication_service.dart';
 import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editWorkout.dart';
-// import 'package:fitness/dynamiclist.dart';
-// import 'package:fitness/mywidgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:fitness/screens/home/homeFab/expandablefab.dart';
-// import 'package:fitness/models/makeABetterName.dart';
-// import 'dart:math' as math;
+import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 
@@ -27,6 +27,10 @@ class _HomeRoute extends State<HomeRoute> {
 
   @override
   Widget build(BuildContext context) {
+    final uid = context.read<User?>()!.uid;
+    final dbService = DatabaseService(uid: uid);
+    // need some form of calendar and scheduling here to confirm the split.
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Schedule for $todayString'),
@@ -65,16 +69,21 @@ class _HomeRoute extends State<HomeRoute> {
       body: Column(
         children: <Widget>[
           Expanded(
-              child: ListView.builder(
-            itemCount: dailyExcerciseMeta[viewDay].length,
-            itemBuilder: (BuildContext context, int indx) {
-              return ExerciseWidget(
-                  title: dailyExcerciseMeta[viewDay][indx].name,
-                  desc: dailyExcerciseMeta[viewDay][indx].set +
-                      ' x ' +
-                      dailyExcerciseMeta[viewDay][indx].rep);
-            },
-          )),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: dbService.users_splits_names_ref
+                  .snapshots(), // this is borken, not my end
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const Text('Loading...');
+                print('foo');
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (BuildContext context, int indx) {
+                    return Text(snapshot.data!.docs[indx]['names']);
+                  },
+                );
+              },
+            ),
+          ),
           // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
         ],
       ),
