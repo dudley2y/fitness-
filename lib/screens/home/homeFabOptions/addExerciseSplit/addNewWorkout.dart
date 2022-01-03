@@ -73,7 +73,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
                 excerciseMeta.add(ExcerciseMeta(
                     name: excersizeNameCtl.text,
                     rep: repCtl.text,
-                    set: setCtl.text,
+                    set:  repCtl.text + ' x ' + setCtl.text,
                     notes: 'none so far',
                     done: false));
                 excersizeNameCtl.clear();
