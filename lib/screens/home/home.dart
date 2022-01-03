@@ -12,6 +12,7 @@ import 'package:fitness/screens/home/homeFab/expandablefab.dart';
 import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
+import 'package:fitness/screens/home/foo.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _HomeRoute extends State<HomeRoute> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Schedule for $todayString'),
+        title: Text('Schedule for ${intToDay(viewDay)}'),
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.only(right: 20.0),
@@ -41,7 +42,7 @@ class _HomeRoute extends State<HomeRoute> {
                 onTap: () {
                   viewDay++;
                   viewDay %= 7;
-                  setState(() {});
+                  setState(() {printDBInfo(uid);});
                 },
                 child: const Icon(Icons.arrow_forward, size: 26.0),
               ))
