@@ -20,7 +20,7 @@ class _EditWorkoutState extends State<EditWorkout> {
       ),
       body: Scaffold(
         body: Column(
-          children: const [
+          children: const   [
             Text("Select a workout split"),
             DisplaySplits()
           ],

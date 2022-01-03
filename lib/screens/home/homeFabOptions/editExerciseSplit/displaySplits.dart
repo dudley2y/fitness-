@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editedWorkout.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fitness/services/database_serive.dart';
@@ -25,9 +26,24 @@ class DisplaySplits extends StatelessWidget {
 
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
+
+              /*  If done tomorrow, will be very happy. 
+                TODOS 
+                1. convert to button list
+                2. onClick get data for specific workout 
+                3. display the workout 
+              */
                 
               return ListTile(
                 title: Text(document.id),
+                onTap: () {
+                  print(document.id);
+                   Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditedWorkout(workoutName: document.id)));
+
+
+                },
+                
               );
             }).toList(),
             shrinkWrap: true,
