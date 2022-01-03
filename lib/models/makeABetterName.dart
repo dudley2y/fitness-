@@ -13,3 +13,11 @@ class ExcerciseMeta{
   late bool done;
   String name,set,rep;
 }
+
+class Exercise{ 
+  final name;
+  final reps;
+
+  Exercise({ this.name, this.reps });
+
+}

@@ -1,16 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
 import 'package:fitness/services/authentication_service.dart';
 import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editWorkout.dart';
-// import 'package:fitness/dynamiclist.dart';
-// import 'package:fitness/mywidgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:fitness/screens/home/homeFab/expandablefab.dart';
-// import 'package:fitness/models/makeABetterName.dart';
-// import 'dart:math' as math;
+import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 
@@ -26,14 +25,28 @@ class _HomeRoute extends State<HomeRoute> {
     context.read<AuthenticationService>().signOut();
   }
 
-  String getDay() {
-    return DateFormat('EEEE').format(DateTime.now());
-  }
-
   @override
   Widget build(BuildContext context) {
+    final uid = context.read<User?>()!.uid;
+    final dbService = DatabaseService(uid: uid);
+    // need some form of calendar and scheduling here to confirm the split.
+
     return Scaffold(
-      appBar: AppBar(title: Text('Schedule for ${getDay()}')),
+      appBar: AppBar(
+        title: Text('Schedule for $todayString'),
+        actions: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  viewDay++;
+                  viewDay %= 7;
+                  setState(() {});
+                },
+                child: const Icon(Icons.arrow_forward, size: 26.0),
+              ))
+        ],
+      ),
       floatingActionButton: ExpandableFab(distance: 112, children: [
         // sub buttons from main FAB
         ActionButton(
@@ -48,26 +61,27 @@ class _HomeRoute extends State<HomeRoute> {
         ActionButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const EditWorkout()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const EditWorkout()));
           },
         )
       ]),
       body: Column(
-        children: <Widget>[
-          Expanded(
-              child: ListView.builder(
-            itemCount: excerciseMeta.length,
-            itemBuilder: (BuildContext context, int indx) {
-              return ExerciseWidget(
-                  title: excerciseMeta[indx].name,
-                  desc: excerciseMeta[indx].set);
-            },
-          )),
-          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
-        ],
+          children: <Widget>[
+              Expanded(
+                  child: ListView.builder(
+                  itemCount: dailyExcerciseMeta[viewDay].length,
+                  itemBuilder: (BuildContext context, int indx) 
+                  {
+                      return ExerciseWidget(
+                          title: dailyExcerciseMeta[viewDay][indx].name,
+                          desc: dailyExcerciseMeta[viewDay][indx].set +
+                              ' x ' +
+                                    dailyExcerciseMeta[viewDay][indx].rep);
+                  },
+              )),
+              // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
+          ],
       ),
     );
   }
