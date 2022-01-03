@@ -15,9 +15,21 @@ class ExcerciseMeta{
 }
 
 class Exercise{ 
-  final name;
   final reps;
+  final weights;
 
-  Exercise({ this.name, this.reps });
+  Exercise({ this.weights, this.reps });
+}
 
+class ExerciseSets{ 
+  late List<Exercise> content; 
+  String name;
+
+  ExerciseSets({required this.name});
+
+  void addSet(weight, reps){
+    content.add(
+      Exercise(weights: weight, reps: reps)
+    );
+  }
 }

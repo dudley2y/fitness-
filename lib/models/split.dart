@@ -1,22 +1,37 @@
 import 'package:fitness/models/workoutDay.dart';
 
 class Split { 
-  final workoutDay monday;
-  final workoutDay tuesday; 
-  final workoutDay wensday; 
-  final workoutDay thursday; 
-  final workoutDay friday;
-  final workoutDay saturday; 
-  final workoutDay sunday;
+  late workoutDay monday;
+  late workoutDay tuesday; 
+  late workoutDay wensday; 
+  late workoutDay thursday; 
+  late workoutDay friday;
+  late workoutDay saturday; 
+  late workoutDay sunday;
 
-  Split({
-    required this.monday, 
-    required this.tuesday, 
-    required this.wensday,
-    required  this.thursday,
-    required this.friday, 
-    required this. saturday, 
-    required this.sunday
-    });
-    
+  void addDay(String day, workoutDay dayContent){
+    switch(day){
+      case "Monday": 
+        monday = dayContent;
+        return;
+      case "Tuesday": 
+        tuesday = dayContent;
+        return;
+      case "Wensday": 
+        wensday = dayContent;
+        return;
+      case "Thursday": 
+        thursday = dayContent;
+        return;
+      case "Friday": 
+        friday = dayContent;
+        return;
+      case "Satuday": 
+        saturday = dayContent;
+        return;
+      case "Sunday": 
+        sunday = dayContent;
+        return;
+    }
+  }
 }
