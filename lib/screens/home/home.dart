@@ -12,6 +12,7 @@ import 'package:fitness/screens/home/homeFab/expandablefab.dart';
 import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
+import 'package:fitness/screens/home/foo.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _HomeRoute extends State<HomeRoute> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Schedule for $todayString'),
+        title: Text('Schedule for ${intToDay(viewDay)}'),
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.only(right: 20.0),
@@ -41,7 +42,9 @@ class _HomeRoute extends State<HomeRoute> {
                 onTap: () {
                   viewDay++;
                   viewDay %= 7;
-                  setState(() {});
+                  setState(() {
+                    printDBInfo(uid);
+                  });
                 },
                 child: const Icon(Icons.arrow_forward, size: 26.0),
               ))
@@ -69,20 +72,16 @@ class _HomeRoute extends State<HomeRoute> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: dbService.users_ref.snapshots(), // dont be dumb
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Text('Loading...');
-                print('foo');
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (BuildContext context, int indx) {
-                    return Text(snapshot.data!.docs[indx]['first_name']);
-                  },
-                );
-              },
-            ),
-          ),
+              child: ListView.builder(
+            itemCount: dailyExcerciseMeta[viewDay].length,
+            itemBuilder: (BuildContext context, int indx) {
+              return ExerciseWidget(
+                  title: dailyExcerciseMeta[viewDay][indx].name,
+                  desc: dailyExcerciseMeta[viewDay][indx].set +
+                      ' x ' +
+                      dailyExcerciseMeta[viewDay][indx].rep);
+            },
+          )),
           // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
         ],
       ),
