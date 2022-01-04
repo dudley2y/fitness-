@@ -70,15 +70,14 @@ class _HomeRoute extends State<HomeRoute> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: dbService.users_splits_names_ref
-                  .snapshots(), // this is borken, not my end
+              stream: dbService.users_ref.snapshots(), // dont be dumb
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return const Text('Loading...');
                 print('foo');
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (BuildContext context, int indx) {
-                    return Text(snapshot.data!.docs[indx]['names']);
+                    return Text(snapshot.data!.docs[indx]['first_name']);
                   },
                 );
               },
