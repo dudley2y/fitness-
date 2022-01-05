@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
@@ -13,6 +15,7 @@ import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 import 'package:fitness/screens/home/foo.dart';
+
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -36,6 +39,7 @@ class _HomeRoute extends State<HomeRoute> {
   Widget build(BuildContext context) {
     final uid = context.read<User?>()!.uid;
     final dbService = DatabaseService(uid: uid);
+    String currSplit = 'Upper-Lower';// will add som scheduling
     // need some form of calendar and scheduling here to confirm the split.
     var templist;
     int len = 0;
@@ -46,7 +50,9 @@ class _HomeRoute extends State<HomeRoute> {
       // dailyExcerciseMeta[viewDay] = templist.docs;
       print(value.docs.map((DocumentSnapshot document) {
         print(document
-            .id); // now that we have this, get the split currently on, then display, see displaySplits for example on how to
+            .id);
+            // now that we have this, get the split currently on, 
+            //then display, see displaySplits for example on how to
       }));
       flag = 1;
     }).catchError((onError) {
@@ -65,8 +71,8 @@ class _HomeRoute extends State<HomeRoute> {
                   viewDay++;
                   viewDay %= 7;
                   setState(() {
-                    printDBInfo(uid);
-                    print('flag ${getFlag()}');
+                    // printDBInfo(uid);
+                    // print('flag ${getFlag()}');
                   });
                 },
                 child: const Icon(Icons.arrow_forward, size: 26.0),
@@ -94,21 +100,35 @@ class _HomeRoute extends State<HomeRoute> {
       ]),
       body: Column(
         children: <Widget>[
-          flag > 0
-              ? Expanded(
-                  child: ListView.builder(
-                  itemCount: dailyExcerciseMeta[viewDay].length,
-                  itemBuilder: (BuildContext context, int indx) {
-                    return ExerciseWidget(
-                        title: dailyExcerciseMeta[viewDay][indx].name,
-                        desc: dailyExcerciseMeta[viewDay][indx].set +
-                            ' x ' +
-                            dailyExcerciseMeta[viewDay][indx].rep);
-                  },
-                ))
-              : Text(
-                  ' No Exercizes yet, \n click the button below to add some! ${getFlag()}'),
-          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
+          FutureBuilder(
+            future: dbService.getUserSplits(currSplit),
+            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+              // check for internet connection
+              print("len: ${snapshot.data!.data()}");
+              if(snapshot.hasError){
+                return const Text('Error Lmao');
+              }
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return const Text("Loading");
+              }
+              print("cs: $currSplit ");
+              Object? silly = snapshot.data!.data();
+              // Map<String,dynamic> foo = silly;
+              return Text(snapshot.data!.data()!.runtimeType.toString());
+              /**
+               * Todo:
+               *  what is linked map? figure and fix
+               */
+          //     return ListView(
+          //       children: snapshot.data!.data.map((DocumentSnapshot document) {
+          //         return ListTile(
+          //           title: Text(document.id),
+          //         );
+          //   }).toList(),
+          //   shrinkWrap: true,
+          // );
+            },
+          ),
         ],
       ),
     );

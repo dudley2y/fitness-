@@ -20,9 +20,8 @@ class DatabaseService {
   Future<QuerySnapshot<Map<String, dynamic>>> getUserSplitNames() async {
     return users_splits_names_ref.doc(uid).collection("names").get();
   }
-  
-  Future<QuerySnapshot<Map<String, dynamic>>> getUserSplits(String name) async {
-    // print(users_splits_ref.doc(uid).collection('ppl').get().);
-    return users_splits_ref.doc(uid).collection(name).get();
+
+  Future<DocumentSnapshot<Object?>> getUserSplits(String name) async {
+    return users_splits_ref.doc(uid).get();
   }
 }
