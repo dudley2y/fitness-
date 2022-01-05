@@ -16,22 +16,26 @@ import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 
-
-class DataBaseRetrieve extends StatefulWidget{
+class DataBaseRetrieve extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _DataBaseRetrieve();
 }
 
-class _DataBaseRetrieve extends State<DataBaseRetrieve>{
+class _DataBaseRetrieve extends State<DataBaseRetrieve> {
   @override
   Widget build(BuildContext context) {
     return Text("foobar");
   }
-  
 }
 
-void printDBInfo(String uid){
-  final dbs = DatabaseService(uid:uid);
-  
-
+void printDBInfo(String uid) {
+  final dbs = DatabaseService(uid: uid);
+  var foo;
+  var idk = dbs.getUserSplitNames().then((value) {
+    foo = value;
+    print(value.docs.length);
+  }).catchError((onError) {
+    print(onError);
+  });
+  print('not yet');
 }
