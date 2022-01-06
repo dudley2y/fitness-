@@ -7,7 +7,6 @@ String getDay() {
 }
 
 int dayToInt(String day) {
-  print(day);
   day = day.toLowerCase();
   switch (day) {
     case 'sunday':

@@ -28,14 +28,14 @@ class _DataBaseRetrieve extends State<DataBaseRetrieve> {
   }
 }
 
-void printDBInfo(String uid) {
-  final dbs = DatabaseService(uid: uid);
-  var foo;
-  var idk = dbs.getUserSplitNames().then((value) {
-    foo = value;
-    print(value.docs.length);
-  }).catchError((onError) {
-    print(onError);
-  });
-  print('not yet');
-}
+// void printDBInfo(String uid) {
+//   final dbs = DatabaseService(uid: uid);
+//   var foo;
+//   var idk = dbs.getUserSplitNames().then((value) {
+//     foo = value;
+//     print(value.docs.length);
+//   }).catchError((onError) {
+//     print(onError);
+//   });
+//   print('not yet');
+// }
