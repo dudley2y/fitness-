@@ -1,26 +1,34 @@
 import 'package:fitness/models/makeABetterName.dart';
 import 'package:intl/intl.dart';
+import 'dart:developer';
 
 String getDay() {
   return DateFormat('EEEE').format(DateTime.now());
 }
 
 int dayToInt(String day) {
+  print(day);
+  day = day.toLowerCase();
   switch (day) {
-    case 'Sunday':
+    case 'sunday':
       return 0;
-    case 'Monday':
+    case 'monday':
       return 1;
-    case 'Tuesday':
+    case 'tuesday':
       return 2;
-    case 'Wednesday':
+    case 'wednesday':
       return 3;
-    case 'Thursday':
+    case 'thursday':
       return 4;
-    case 'Friday':
+    case 'friday':
       return 5;
-    case 'Saturday':
+    case 'saturday':
       return 6;
+    case 'wensday':
+      print('josh is idot')    ;
+      log('data: josh is idot');
+      return 3;
+
     default:
       return -1;
   }
@@ -54,6 +62,7 @@ final String todayString = getDay();
 final int today = dayToInt(todayString);
 int viewDay =
     today; // today is today, viewDay is the day((of the week) the user is looking at rn
+bool flag2 = false;// bad idea, but eh
 
 /**
  * maybe there is a better way to pass data across pages, but this was the easiest

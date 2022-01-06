@@ -116,22 +116,12 @@ class _HomeRoute extends State<HomeRoute> {
               if(users_splits_data.isEmpty && dailyExcerciseMeta[viewDay].isEmpty){
                 return Text('No plan for ${intToDay(today)}} yet.');
               }
-              else if(users_splits_data.isNotEmpty && dailyExcerciseMeta[viewDay].isEmpty){
+              else if(users_splits_data.isNotEmpty && dailyExcerciseMeta[viewDay].isEmpty && !flag2){
+                flag2 = true;// not the best way, the .isEmpty should correspond to the day appended to, but this works
                 for (var day in users_splits_data[currSplit].keys) {
-                  // print(users_splits_data[currSplit][day].keys);
                   for(var ex in users_splits_data[currSplit][day].keys){
-                    // print("$ex ${users_splits_data[currSplit][day][ex][0]['reps']}");
-                    dailyExcerciseMeta[viewDay].add(ExcerciseMeta(name: ex?? 'null', set: ex?.length.toString()?? '0', rep: users_splits_data[currSplit][day][ex][0]['reps'] ?? '0'));
+                    dailyExcerciseMeta[dayToInt(day)].add(ExcerciseMeta(name: ex?? 'null', set: ex?.length.toString()?? '0', rep: users_splits_data[currSplit][day][ex][0]['reps'] ?? '0'));
                   }
-                }
-                // return const Text(';(');
-                // return Text("tpye ${users_splits_data[currSplit][intToDay(viewDay).toLowerCase()]}");
-                if(users_splits_data[currSplit][intToDay(viewDay).toLowerCase()] == null){
-                  dailyExcerciseMeta[viewDay].add(ExcerciseMeta(name: 'Off Day', set: '0', rep: '0'));
-                }
-                else{
-                  dailyExcerciseMeta[viewDay];
-                  return Text('foob ${users_splits_data[intToDay(viewDay)].toString()}');
                 }
               }
 
