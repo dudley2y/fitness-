@@ -14,8 +14,7 @@ import 'package:fitness/screens/home/homeFab/expandablefab.dart';
 import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
-import 'package:fitness/screens/home/foo.dart';
-
+// import 'package:fitness/screens/home/foo.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -39,7 +38,7 @@ class _HomeRoute extends State<HomeRoute> {
   Widget build(BuildContext context) {
     final uid = context.read<User?>()!.uid;
     final dbService = DatabaseService(uid: uid);
-    String currSplit = 'Upper-Lower';// will add som scheduling
+    String currSplit = 'Upper-Lower'; // will add som scheduling
     // need some form of calendar and scheduling here to confirm the split.
     var templist;
     int len = 0;
@@ -49,10 +48,9 @@ class _HomeRoute extends State<HomeRoute> {
           .docs.length; // now load the temp to dailyExcerciseMeta[viewDay]
       // dailyExcerciseMeta[viewDay] = templist.docs;
       print(value.docs.map((DocumentSnapshot document) {
-        print(document
-            .id);
-            // now that we have this, get the split currently on, 
-            //then display, see displaySplits for example on how to
+        print(document.id);
+        // now that we have this, get the split currently on,
+        //then display, see displaySplits for example on how to
       }));
       flag = 1;
     }).catchError((onError) {
@@ -102,31 +100,23 @@ class _HomeRoute extends State<HomeRoute> {
         children: <Widget>[
           FutureBuilder(
             future: dbService.getUserSplits(currSplit),
-            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
               // check for internet connection
-              print("len: ${snapshot.data!.data()}");
-              if(snapshot.hasError){
+              if (snapshot.hasError) {
                 return const Text('Error Lmao');
               }
-              if(snapshot.connectionState == ConnectionState.waiting){
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text("Loading");
               }
-              print("cs: $currSplit ");
+              // print("len: ${snapshot.data!.data()}");
+              // print("cs: $currSplit ");
               Object? silly = snapshot.data!.data();
               // Map<String,dynamic> foo = silly;
+              Map<String, dynamic> users_splits_data =
+                  snapshot.data!.data() as Map<String, dynamic>;
+              print("usd ${users_splits_data}");
               return Text(snapshot.data!.data()!.runtimeType.toString());
-              /**
-               * Todo:
-               *  what is linked map? figure and fix
-               */
-          //     return ListView(
-          //       children: snapshot.data!.data.map((DocumentSnapshot document) {
-          //         return ListTile(
-          //           title: Text(document.id),
-          //         );
-          //   }).toList(),
-          //   shrinkWrap: true,
-          // );
             },
           ),
         ],
