@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitness/models/makeABetterName.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
 import 'package:fitness/services/authentication_service.dart';
@@ -38,7 +39,7 @@ class _HomeRoute extends State<HomeRoute> {
   Widget build(BuildContext context) {
     final uid = context.read<User?>()!.uid;
     final dbService = DatabaseService(uid: uid);
-    String currSplit = 'Upper-Lower'; // will add som scheduling
+    String currSplit = 'PPL'; // will add som scheduling
     // need some form of calendar and scheduling here to confirm the split.
     var templist;
     int len = 0;
@@ -109,14 +110,43 @@ class _HomeRoute extends State<HomeRoute> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text("Loading");
               }
-              // print("len: ${snapshot.data!.data()}");
-              // print("cs: $currSplit ");
-              Object? silly = snapshot.data!.data();
-              // Map<String,dynamic> foo = silly;
               Map<String, dynamic> users_splits_data =
                   snapshot.data!.data() as Map<String, dynamic>;
-              print("usd ${users_splits_data}");
-              return Text(snapshot.data!.data()!.runtimeType.toString());
+              // populate list
+              if(users_splits_data.isEmpty && dailyExcerciseMeta[viewDay].isEmpty){
+                return Text('No plan for ${intToDay(today)}} yet.');
+              }
+              else if(users_splits_data.isNotEmpty && dailyExcerciseMeta[viewDay].isEmpty){
+                for (var day in users_splits_data[currSplit].keys) {
+                  // print(users_splits_data[currSplit][day].keys);
+                  for(var ex in users_splits_data[currSplit][day].keys){
+                    // print("$ex ${users_splits_data[currSplit][day][ex][0]['reps']}");
+                    dailyExcerciseMeta[viewDay].add(ExcerciseMeta(name: ex?? 'null', set: ex?.length.toString()?? '0', rep: users_splits_data[currSplit][day][ex][0]['reps'] ?? '0'));
+                  }
+                }
+                // return const Text(';(');
+                // return Text("tpye ${users_splits_data[currSplit][intToDay(viewDay).toLowerCase()]}");
+                if(users_splits_data[currSplit][intToDay(viewDay).toLowerCase()] == null){
+                  dailyExcerciseMeta[viewDay].add(ExcerciseMeta(name: 'Off Day', set: '0', rep: '0'));
+                }
+                else{
+                  dailyExcerciseMeta[viewDay];
+                  return Text('foob ${users_splits_data[intToDay(viewDay)].toString()}');
+                }
+              }
+
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: dailyExcerciseMeta[viewDay].length,
+                itemBuilder: (BuildContext context, int index){
+                  return ExerciseWidget(
+                    title: dailyExcerciseMeta[viewDay][index].name,
+                    desc: dailyExcerciseMeta[viewDay][index].set + ' x ' + dailyExcerciseMeta[viewDay][index].rep,
+                  );
+
+                },
+              );
+              // print("usd ${users_splits_data}");
             },
           ),
         ],

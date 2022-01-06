@@ -49,7 +49,7 @@ String intToDay(int day){
 }
 
 List<ExcerciseMeta> excerciseMeta = [];
-List<List<ExcerciseMeta>> dailyExcerciseMeta = [[], [], [], [], [], [], []];
+List<List<ExcerciseMeta>> dailyExcerciseMeta = [[], [], [], [], [], [], []];// one entry per day
 final String todayString = getDay();
 final int today = dayToInt(todayString);
 int viewDay =
