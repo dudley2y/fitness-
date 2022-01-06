@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness/services/database_serive.dart';
+import 'package:fitness/services/database_service.dart';
 
 class AuthenticationService{
   final FirebaseAuth _firebaseAuth;

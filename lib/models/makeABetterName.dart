@@ -14,22 +14,22 @@ class ExcerciseMeta{
   String name,set,rep;
 }
 
-class Exercise{ 
-  final reps;
-  final weights;
+class RepsAndWeight{
+  final reps; 
+  final weight;
 
-  Exercise({ this.weights, this.reps });
+  RepsAndWeight({ this.reps , this.weight});
 }
 
-class ExerciseSets{ 
-  late List<Exercise> content; 
+class Exercise{ 
+  late List<RepsAndWeight> content; 
   String name;
 
-  ExerciseSets({required this.name});
+  Exercise({required this.name});
 
   void addSet(weight, reps){
     content.add(
-      Exercise(weights: weight, reps: reps)
+      RepsAndWeight(reps: reps, weight: weight)
     );
   }
 }

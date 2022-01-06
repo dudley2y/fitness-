@@ -1,15 +1,15 @@
-import 'package:fitness/models/workoutDay.dart';
+import 'package:fitness/models/workout.dart';
 
 class Split { 
-  late workoutDay monday;
-  late workoutDay tuesday; 
-  late workoutDay wensday; 
-  late workoutDay thursday; 
-  late workoutDay friday;
-  late workoutDay saturday; 
-  late workoutDay sunday;
+  late Workout monday;
+  late Workout tuesday; 
+  late Workout wensday; 
+  late Workout thursday; 
+  late Workout friday;
+  late Workout saturday; 
+  late Workout sunday;
 
-  void addDay(String day, workoutDay dayContent){
+  void addDay(String day, Workout dayContent){
     switch(day){
       case "Monday": 
         monday = dayContent;
@@ -32,6 +32,27 @@ class Split {
       case "Sunday": 
         sunday = dayContent;
         return;
+    }
+  }
+
+  Workout getData(String day){
+    switch(day){
+      case "Monday": 
+        return monday;
+      case "Tuesday": 
+        return tuesday;
+      case "Wensday": 
+        return wensday;
+      case "Thursday": 
+        return thursday;
+      case "Friday": 
+        return friday;
+      case "Satuday": 
+        return saturday;
+      case "Sunday": 
+        return sunday;
+      default: 
+        return Workout(); 
     }
   }
 }

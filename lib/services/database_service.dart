@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness/models/makeABetterName.dart';
 import 'package:fitness/models/split.dart';
-import 'package:fitness/models/workoutDay.dart';
+import 'package:fitness/models/workout.dart';
 
 class DatabaseService {
 
@@ -32,12 +32,12 @@ class DatabaseService {
     return users_splits_names_ref.doc(uid).collection("names").get();
   }
 
-  workoutDay convertJsonDayToDay(Map<String, dynamic> jsonDay){
+  Workout convertJsonDayToDay(Map<String, dynamic> jsonDay){
 
-    workoutDay today = workoutDay();
+    Workout today = Workout();
 
     for(var exercise in jsonDay.keys){
-      ExerciseSets currExercise = ExerciseSets(name: exercise);
+      Exercise currExercise = Exercise(name: exercise);
       for(var thing in jsonDay[exercise]){
         currExercise.addSet(thing["weight"], thing["reps"]);
       }
@@ -53,15 +53,18 @@ class DatabaseService {
     Split currSplit = Split();
 
     for (var day in jsonData.keys) {
-      workoutDay today = convertJsonDayToDay(jsonData[day]);
+      Workout today = convertJsonDayToDay(jsonData[day]);
       currSplit.addDay(day, today);
     }
-
     return currSplit;
   }
+
+    Future<DocumentSnapshot<Object?>> getUserWorkoutGivenName(String split) async {
+      return users_splits_ref.doc(uid).get();
+    }
   
 
-  Future<Split> getUserWorkoutGivenName(String split) async {
+  Future<Split> getUserWorkoutGivenName2(String split) async {
     final users_splits = await users_splits_ref.doc(uid).get();
     Map<String, dynamic> users_splits_data = users_splits.data() as Map<String,dynamic>;
     return convertJsonToSplit(users_splits_data[split]);
