@@ -92,7 +92,7 @@ class _HomeRoute extends State<HomeRoute> {
       body: Column(
         children: <Widget>[
           FutureBuilder(
-            future: dbService.getUserSplits(currSplit),
+            future: dbService.getUserWorkoutGivenName(currSplit),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               // check for internet connection
