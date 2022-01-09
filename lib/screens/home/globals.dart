@@ -24,7 +24,7 @@ int dayToInt(String day) {
     case 'saturday':
       return 6;
     case 'wensday':
-      print('josh is idot')    ;
+      print('josh is idot');
       log('data: josh is idot');
       return 3;
 
@@ -33,8 +33,8 @@ int dayToInt(String day) {
   }
 }
 
-String intToDay(int day){
-    switch (day) {
+String intToDay(int day) {
+  switch (day) {
     case 0:
       return 'Sunday';
     case 1:
@@ -52,11 +52,18 @@ String intToDay(int day){
     default:
       return '';
   }
-
 }
 
 List<ExcerciseMeta> excerciseMeta = [];
-List<List<ExcerciseMeta>> dailyExcerciseMeta = [[], [], [], [], [], [], []];// one entry per day
+List<List<ExcerciseMeta>> dailyExcerciseMeta = [
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  []
+]; // one entry per day
 final String todayString = getDay();
 final int today = dayToInt(todayString);
 int viewDay =

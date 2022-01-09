@@ -3,12 +3,11 @@ import 'dart:html';
 import 'package:fitness/models/makeABetterName.dart';
 import 'package:flutter/material.dart';
 
-import 'exerciseWidget.dart';
-
-import 'package:fitness/screens/home/globals.dart';
-
 class AddNewWorkout extends StatefulWidget {
-  const AddNewWorkout({Key? key}) : super(key: key);
+  AddNewWorkout({Key? key, required this.metaList, required this.day})
+      : super(key: key);
+  List<List<ExcerciseMeta>> metaList;
+  int day;
 
   @override
   _AddNewWorkoutState createState() => _AddNewWorkoutState();
@@ -20,8 +19,6 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
       TextEditingController(text: 'Excercise Name Here');
   final TextEditingController setCtl = TextEditingController(text: 'Sets');
   final TextEditingController repCtl = TextEditingController(text: 'Reps');
-  FloatingActionButton fabMainButton =
-      FloatingActionButton(onPressed: () => {});
 
   ElevatedButton addWorkoutButton = ElevatedButton(
     onPressed: () {},
@@ -70,7 +67,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
 
           ElevatedButton(
               onPressed: () {
-                dailyExcerciseMeta[viewDay].add(ExcerciseMeta(
+                widget.metaList[widget.day].add(ExcerciseMeta(
                     name: excersizeNameCtl.text,
                     rep: repCtl.text,
                     set: setCtl.text,

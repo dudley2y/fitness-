@@ -12,10 +12,10 @@ import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:fitness/screens/home/homeFab/expandablefab.dart';
-import 'package:fitness/services/database_serive.dart';
+import 'package:fitness/services/database_service.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
-import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewSplit.dart';
+import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/nameNewSplit.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -68,7 +68,10 @@ class _HomeRoute extends State<HomeRoute> {
               await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddNewWorkout()));
+                      builder: (context) => AddNewWorkout(
+                            metaList: dailyExcerciseMeta,
+                            day: viewDay,
+                          )));
               setState(() {});
             }),
         ActionButton(
@@ -81,8 +84,8 @@ class _HomeRoute extends State<HomeRoute> {
         ActionButton(
           icon: const Icon(Icons.article_outlined),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddSplit()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => NameSplit()));
           },
         )
       ]),
@@ -99,22 +102,27 @@ class _HomeRoute extends State<HomeRoute> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text("Loading");
               }
-              if(snapshot.data?.data() != null){
+              if (snapshot.data?.data() != null) {
                 // print("here");
                 Map<String, dynamic> users_splits_data =
-                snapshot.data?.data() as Map<String, dynamic>;
+                    snapshot.data?.data() as Map<String, dynamic>;
                 // populate list
-                if(users_splits_data.isEmpty && dailyExcerciseMeta[viewDay].isEmpty){
+                if (users_splits_data.isEmpty &&
+                    dailyExcerciseMeta[viewDay].isEmpty) {
                   return Text('No plan for ${intToDay(today)}} yet.');
-                }
-                else if(users_splits_data.isNotEmpty && dailyExcerciseMeta[viewDay].isEmpty && !flag2){
-                  flag2 = true;// not the best way, the .isEmpty should correspond to the day appended to, but this works
+                } else if (users_splits_data.isNotEmpty &&
+                    dailyExcerciseMeta[viewDay].isEmpty &&
+                    !flag2) {
+                  flag2 =
+                      true; // not the best way, the .isEmpty should correspond to the day appended to, but this works
                   for (var day in users_splits_data[currSplit].keys) {
-                    for(var ex in users_splits_data[currSplit][day].keys){
+                    for (var ex in users_splits_data[currSplit][day].keys) {
                       dailyExcerciseMeta[dayToInt(day)].add(ExcerciseMeta(
-                        name: ex?? 'null', 
-                        set: ex?.length.toString()?? '0', 
-                        rep: users_splits_data[currSplit][day][ex][0]['reps'] ?? '0'));
+                          name: ex ?? 'null',
+                          set: ex?.length.toString() ?? '0',
+                          rep: users_splits_data[currSplit][day][ex][0]
+                                  ['reps'] ??
+                              '0'));
                     }
                   }
                 }
@@ -123,10 +131,12 @@ class _HomeRoute extends State<HomeRoute> {
               return ListView.builder(
                 shrinkWrap: true,
                 itemCount: dailyExcerciseMeta[viewDay].length,
-                itemBuilder: (BuildContext context, int index){
+                itemBuilder: (BuildContext context, int index) {
                   return ExerciseWidget(
                     title: dailyExcerciseMeta[viewDay][index].name,
-                    desc: dailyExcerciseMeta[viewDay][index].set + ' x ' + dailyExcerciseMeta[viewDay][index].rep,
+                    desc: dailyExcerciseMeta[viewDay][index].set +
+                        ' x ' +
+                        dailyExcerciseMeta[viewDay][index].rep,
                   );
                 },
               );
