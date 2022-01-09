@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitness/models/makeABetterName.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
 import 'package:fitness/services/authentication_service.dart';
@@ -11,11 +12,10 @@ import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:fitness/screens/home/homeFab/expandablefab.dart';
-import 'package:fitness/services/database_serive.dart';
+import 'package:fitness/services/database_service.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
-import 'package:fitness/screens/home/foo.dart';
-
+import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/nameNewSplit.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -39,27 +39,8 @@ class _HomeRoute extends State<HomeRoute> {
   Widget build(BuildContext context) {
     final uid = context.read<User?>()!.uid;
     final dbService = DatabaseService(uid: uid);
-    String currSplit = 'Upper-Lower';// will add som scheduling
+    String currSplit = 'PPL'; // will add som scheduling
     // need some form of calendar and scheduling here to confirm the split.
-    var templist;
-    int len = 0;
-    dbService.getUserSplitNames().then((value) {
-      templist = value;
-      len = templist
-          .docs.length; // now load the temp to dailyExcerciseMeta[viewDay]
-      // dailyExcerciseMeta[viewDay] = templist.docs;
-      print(value.docs.map((DocumentSnapshot document) {
-        print(document
-            .id);
-            // now that we have this, get the split currently on, 
-            //then display, see displaySplits for example on how to
-      }));
-      flag = 1;
-    }).catchError((onError) {
-      flag = -1;
-      print(onError);
-    });
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Schedule for ${intToDay(viewDay)}'),
@@ -87,7 +68,10 @@ class _HomeRoute extends State<HomeRoute> {
               await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddNewWorkout()));
+                      builder: (context) => AddNewWorkout(
+                            metaList: dailyExcerciseMeta,
+                            day: viewDay,
+                          )));
               setState(() {});
             }),
         ActionButton(
@@ -96,37 +80,66 @@ class _HomeRoute extends State<HomeRoute> {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const EditWorkout()));
           },
+        ),
+        ActionButton(
+          icon: const Icon(Icons.article_outlined),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => NameSplit()));
+          },
         )
       ]),
       body: Column(
         children: <Widget>[
           FutureBuilder(
             future: dbService.getUserSplits(currSplit),
-            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
               // check for internet connection
-              print("len: ${snapshot.data!.data()}");
-              if(snapshot.hasError){
+              if (snapshot.hasError) {
                 return const Text('Error Lmao');
               }
-              if(snapshot.connectionState == ConnectionState.waiting){
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text("Loading");
               }
-              print("cs: $currSplit ");
-              Object? silly = snapshot.data!.data();
-              // Map<String,dynamic> foo = silly;
-              return Text(snapshot.data!.data()!.runtimeType.toString());
-              /**
-               * Todo:
-               *  what is linked map? figure and fix
-               */
-          //     return ListView(
-          //       children: snapshot.data!.data.map((DocumentSnapshot document) {
-          //         return ListTile(
-          //           title: Text(document.id),
-          //         );
-          //   }).toList(),
-          //   shrinkWrap: true,
-          // );
+              if (snapshot.data?.data() != null) {
+                // print("here");
+                Map<String, dynamic> users_splits_data =
+                    snapshot.data?.data() as Map<String, dynamic>;
+                // populate list
+                if (users_splits_data.isEmpty &&
+                    dailyExcerciseMeta[viewDay].isEmpty) {
+                  return Text('No plan for ${intToDay(today)}} yet.');
+                } else if (users_splits_data.isNotEmpty &&
+                    dailyExcerciseMeta[viewDay].isEmpty &&
+                    !flag2) {
+                  flag2 =
+                      true; // not the best way, the .isEmpty should correspond to the day appended to, but this works
+                  for (var day in users_splits_data[currSplit].keys) {
+                    for (var ex in users_splits_data[currSplit][day].keys) {
+                      dailyExcerciseMeta[dayToInt(day)].add(ExcerciseMeta(
+                          name: ex ?? 'null',
+                          set: ex?.length.toString() ?? '0',
+                          rep: users_splits_data[currSplit][day][ex][0]
+                                  ['reps'] ??
+                              '0'));
+                    }
+                  }
+                }
+              }
+
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: dailyExcerciseMeta[viewDay].length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ExerciseWidget(
+                    title: dailyExcerciseMeta[viewDay][index].name,
+                    desc: dailyExcerciseMeta[viewDay][index].set +
+                        ' x ' +
+                        dailyExcerciseMeta[viewDay][index].rep,
+                  );
+                },
+              );
             },
           ),
         ],
