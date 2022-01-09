@@ -1,17 +1,21 @@
+import 'dart:collection';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
 import 'package:fitness/services/authentication_service.dart';
 import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editWorkout.dart';
-// import 'package:fitness/dynamiclist.dart';
-// import 'package:fitness/mywidgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:fitness/screens/home/homeFab/expandablefab.dart';
-// import 'package:fitness/models/makeABetterName.dart';
-// import 'dart:math' as math;
+import 'package:fitness/services/database_serive.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
+import 'package:fitness/screens/home/foo.dart';
+
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -25,11 +29,40 @@ class _HomeRoute extends State<HomeRoute> {
     context.read<AuthenticationService>().signOut();
   }
 
+  int flag = 0;
+
+  int getFlag() {
+    return flag;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final uid = context.read<User?>()!.uid;
+    final dbService = DatabaseService(uid: uid);
+    String currSplit = 'Upper-Lower';// will add som scheduling
+    // need some form of calendar and scheduling here to confirm the split.
+    var templist;
+    int len = 0;
+    dbService.getUserSplitNames().then((value) {
+      templist = value;
+      len = templist
+          .docs.length; // now load the temp to dailyExcerciseMeta[viewDay]
+      // dailyExcerciseMeta[viewDay] = templist.docs;
+      print(value.docs.map((DocumentSnapshot document) {
+        print(document
+            .id);
+            // now that we have this, get the split currently on, 
+            //then display, see displaySplits for example on how to
+      }));
+      flag = 1;
+    }).catchError((onError) {
+      flag = -1;
+      print(onError);
+    });
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Schedule for $todayString'),
+        title: Text('Schedule for ${intToDay(viewDay)}'),
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.only(right: 20.0),
@@ -37,7 +70,10 @@ class _HomeRoute extends State<HomeRoute> {
                 onTap: () {
                   viewDay++;
                   viewDay %= 7;
-                  setState(() {});
+                  setState(() {
+                    // printDBInfo(uid);
+                    // print('flag ${getFlag()}');
+                  });
                 },
                 child: const Icon(Icons.arrow_forward, size: 26.0),
               ))
@@ -64,18 +100,35 @@ class _HomeRoute extends State<HomeRoute> {
       ]),
       body: Column(
         children: <Widget>[
-          Expanded(
-              child: ListView.builder(
-            itemCount: dailyExcerciseMeta[viewDay].length,
-            itemBuilder: (BuildContext context, int indx) {
-              return ExerciseWidget(
-                  title: dailyExcerciseMeta[viewDay][indx].name,
-                  desc: dailyExcerciseMeta[viewDay][indx].set +
-                      ' x ' +
-                      dailyExcerciseMeta[viewDay][indx].rep);
+          FutureBuilder(
+            future: dbService.getUserSplits(currSplit),
+            builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+              // check for internet connection
+              print("len: ${snapshot.data!.data()}");
+              if(snapshot.hasError){
+                return const Text('Error Lmao');
+              }
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return const Text("Loading");
+              }
+              print("cs: $currSplit ");
+              Object? silly = snapshot.data!.data();
+              // Map<String,dynamic> foo = silly;
+              return Text(snapshot.data!.data()!.runtimeType.toString());
+              /**
+               * Todo:
+               *  what is linked map? figure and fix
+               */
+          //     return ListView(
+          //       children: snapshot.data!.data.map((DocumentSnapshot document) {
+          //         return ListTile(
+          //           title: Text(document.id),
+          //         );
+          //   }).toList(),
+          //   shrinkWrap: true,
+          // );
             },
-          )),
-          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
+          ),
         ],
       ),
     );

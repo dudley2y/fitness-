@@ -31,6 +31,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
   @override
   Widget build(BuildContext context) {
     String name = '', reps = '', sets = '';
+
     return Scaffold(
       appBar: AppBar(title: const Text('Adding workout!')),
       body: Column(
@@ -90,4 +91,6 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
 
 /** 
  * use validator in leiu of controllers, see signup
+ * check for docs.length, if not 0, display, otherwise we show default
+ * see foo.dart for example
  */

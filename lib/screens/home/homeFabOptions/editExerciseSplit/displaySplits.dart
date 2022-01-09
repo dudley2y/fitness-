@@ -6,26 +6,25 @@ import 'package:fitness/services/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DisplaySplits extends StatelessWidget {
-  const DisplaySplits({ Key? key }) : super(key: key);
+  const DisplaySplits({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
-      future: DatabaseService(uid: context.read<User?>()!.uid).getUserSplits(),
-      builder: 
-        (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-
-          if(snapshot.hasError){
+        future: DatabaseService(uid: context.read<User?>()!.uid)
+            .getUserSplitNames(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
             return const Text("Something went wrong");
           }
 
-          if(snapshot.connectionState == ConnectionState.waiting){
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading");
           }
 
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
+<<<<<<< HEAD
 
               /*  If done tomorrow, will be very happy. 
                 TODOS 
@@ -34,6 +33,8 @@ class DisplaySplits extends StatelessWidget {
                 3. display the workout 
               */
                 
+=======
+>>>>>>> 2d5bdac931674e76b8f072eda240e80a33b86a86
               return ListTile(
                 title: Text(document.id),
                 onTap: () {
@@ -47,8 +48,7 @@ class DisplaySplits extends StatelessWidget {
               );
             }).toList(),
             shrinkWrap: true,
-        );
-      }
-    );
+          );
+        });
   }
 }

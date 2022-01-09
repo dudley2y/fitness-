@@ -5,14 +5,14 @@ String getDay() {
   return DateFormat('EEEE').format(DateTime.now());
 }
 
-int strToDayOfWeek(String day) {
+int dayToInt(String day) {
   switch (day) {
     case 'Sunday':
       return 0;
     case 'Monday':
       return 1;
     case 'Tuesday':
-      return 5;
+      return 2;
     case 'Wednesday':
       return 3;
     case 'Thursday':
@@ -26,10 +26,32 @@ int strToDayOfWeek(String day) {
   }
 }
 
+String intToDay(int day){
+    switch (day) {
+    case 0:
+      return 'Sunday';
+    case 1:
+      return 'Monday';
+    case 2:
+      return 'Tuesday';
+    case 3:
+      return 'Wednesday';
+    case 4:
+      return 'Thursday';
+    case 5:
+      return 'Friday';
+    case 6:
+      return 'Saturday';
+    default:
+      return '';
+  }
+
+}
+
 List<ExcerciseMeta> excerciseMeta = [];
 List<List<ExcerciseMeta>> dailyExcerciseMeta = [[], [], [], [], [], [], []];
 final String todayString = getDay();
-final int today = strToDayOfWeek(todayString);
+final int today = dayToInt(todayString);
 int viewDay =
     today; // today is today, viewDay is the day((of the week) the user is looking at rn
 
