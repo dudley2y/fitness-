@@ -34,6 +34,7 @@ class _HomeRoute extends State<HomeRoute> {
   }
 
   int _currDay = today;
+  double _swipeDistance = 0; 
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,31 @@ class _HomeRoute extends State<HomeRoute> {
       body: 
         Padding( 
           padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
-          child: Container( 
+          child: GestureDetector( 
+              onHorizontalDragUpdate: (details) { 
+                _swipeDistance += details.delta.dx;
+              },
+
+              onHorizontalDragEnd: (details){
+
+                int sensitivty = 5;
+
+                if(_swipeDistance > sensitivty){
+                  setState(() {
+                    _currDay++;
+                    _currDay%=7;
+                    _swipeDistance = 0;
+                  });
+                }
+                // swipe left 
+                if(_swipeDistance < -sensitivty){
+                  setState(() {
+                    _currDay--;
+                    _currDay%=7;
+                    _swipeDistance = 0;
+                  });
+                }
+              },
               child: Column(
                 children: [
                   Container(  
@@ -86,41 +111,12 @@ class _HomeRoute extends State<HomeRoute> {
                                         borderRadius: BorderRadius.all(Radius.circular(28)),
                                         color: Color(0xff83C5BE),
                                 ),
-                    child: Row(  
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                         Padding(
-                              padding: const  EdgeInsets.only(right: 15),
-                              child: 
-                              ActionButton(
-                                icon: const Icon(Icons.arrow_left_sharp),
-                                onPressed: () => setState(() {
-                                                 _currDay--;
-                                                  _currDay%=7;
-                                                  }
-                                                )
-                                )
-                              ),
-                              Text(
-                                "${intToDay(_currDay)}'s workout", 
-                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300),
-
-                              ),
-                              Padding(
-                                padding: const  EdgeInsets.only(left: 15),
-                                child: ActionButton(
-                                        
-                                        icon: const Icon(Icons.arrow_right_sharp),
-                                        onPressed: () {
-                                          setState(() {
-                                            _currDay++;
-                                            _currDay%=7;
-                                          });
-                                        }
-                                  )
-                              ),
-                      ],
-                    ),
+                    child: 
+                      Center(   
+                        child: Text( "${intToDay(_currDay)}'s workout", 
+                                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300)
+                                    ),
+                      )
                   ),
             ]
           ),
