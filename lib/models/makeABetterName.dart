@@ -27,7 +27,7 @@ class Exercise{
 
   Exercise({required this.name});
 
-  void addSet(weight, reps){
+  void addSet(reps, weight){
     content.add(
       RepsAndWeight(reps: reps, weight: weight)
     );

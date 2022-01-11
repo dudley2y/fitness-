@@ -1,7 +1,5 @@
-import 'dart:collection';
+import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fitness/models/makeABetterName.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
 import 'package:fitness/services/authentication_service.dart';
@@ -14,11 +12,11 @@ import 'package:provider/src/provider.dart';
 import 'package:fitness/screens/home/homeFab/expandablefab.dart';
 import 'package:fitness/services/database_service.dart';
 import 'package:fitness/screens/home/globals.dart';
-import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/nameNewSplit.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
+
 
   @override
   State<StatefulWidget> createState() => _HomeRoute();
@@ -35,31 +33,13 @@ class _HomeRoute extends State<HomeRoute> {
     return flag;
   }
 
+  int _currDay = today;
+
   @override
   Widget build(BuildContext context) {
-    final uid = context.read<User?>()!.uid;
-    final dbService = DatabaseService(uid: uid);
-    String currSplit = 'PPL'; // will add som scheduling
-    // need some form of calendar and scheduling here to confirm the split.
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Schedule for ${intToDay(viewDay)}'),
-        actions: <Widget>[
-          Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  viewDay++;
-                  viewDay %= 7;
-                  setState(() {
-                    // printDBInfo(uid);
-                    // print('flag ${getFlag()}');
-                  });
-                },
-                child: const Icon(Icons.arrow_forward, size: 26.0),
-              ))
-        ],
-      ),
+      backgroundColor: const Color(0xFFEDF6F9),
       floatingActionButton: ExpandableFab(distance: 112, children: [
         // sub buttons from main FAB
         ActionButton(
@@ -89,61 +69,63 @@ class _HomeRoute extends State<HomeRoute> {
           },
         )
       ]),
-      body: Column(
-        children: <Widget>[
-          FutureBuilder(
-            future: dbService.getUserWorkoutGivenName(currSplit),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              // check for internet connection
-              if (snapshot.hasError) {
-                return const Text('Error Lmao');
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Text("Loading");
-              }
-              if (snapshot.data?.data() != null) {
-                // print("here");
-                Map<String, dynamic> users_splits_data =
-                    snapshot.data?.data() as Map<String, dynamic>;
-                // populate list
-                if (users_splits_data.isEmpty &&
-                    dailyExcerciseMeta[viewDay].isEmpty) {
-                  return Text('No plan for ${intToDay(today)}} yet.');
-                } else if (users_splits_data.isNotEmpty &&
-                    dailyExcerciseMeta[viewDay].isEmpty &&
-                    !flag2) {
-                  flag2 =
-                      true; // not the best way, the .isEmpty should correspond to the day appended to, but this works
-                  for (var day in users_splits_data[currSplit].keys) {
-                    for (var ex in users_splits_data[currSplit][day].keys) {
-                      dailyExcerciseMeta[dayToInt(day)].add(ExcerciseMeta(
-                          name: ex ?? 'null',
-                          set: ex?.length.toString() ?? '0',
-                          rep: users_splits_data[currSplit][day][ex][0]
-                                  ['reps'] ??
-                              '0'));
-                    }
-                  }
-                }
-              }
+      body: 
+        Padding( 
+          padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
+          child: Container( 
+              child: Column(
+                children: [
+                  Container(  
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width ,
+                    margin:  EdgeInsets.only(
+                                left:  MediaQuery.of(context).size.width*(1/5),
+                                right: MediaQuery.of(context).size.width*(1/5)),
+                    height: 50,
+                    decoration: const BoxDecoration(  
+                                        borderRadius: BorderRadius.all(Radius.circular(28)),
+                                        color: Color(0xff83C5BE),
+                                ),
+                    child: Row(  
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                         Padding(
+                              padding: const  EdgeInsets.only(right: 15),
+                              child: 
+                              ActionButton(
+                                icon: const Icon(Icons.arrow_left_sharp),
+                                onPressed: () => setState(() {
+                                                 _currDay--;
+                                                  _currDay%=7;
+                                                  }
+                                                )
+                                )
+                              ),
+                              Text(
+                                "${intToDay(_currDay)}'s workout", 
+                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300),
 
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: dailyExcerciseMeta[viewDay].length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ExerciseWidget(
-                    title: dailyExcerciseMeta[viewDay][index].name,
-                    desc: dailyExcerciseMeta[viewDay][index].set +
-                        ' x ' +
-                        dailyExcerciseMeta[viewDay][index].rep,
-                  );
-                },
-              );
-            },
+                              ),
+                              Padding(
+                                padding: const  EdgeInsets.only(left: 15),
+                                child: ActionButton(
+                                        
+                                        icon: const Icon(Icons.arrow_right_sharp),
+                                        onPressed: () {
+                                          setState(() {
+                                            _currDay++;
+                                            _currDay%=7;
+                                          });
+                                        }
+                                  )
+                              ),
+                      ],
+                    ),
+                  ),
+            ]
           ),
-        ],
-      ),
+        ),
+      )
     );
   }
 }
