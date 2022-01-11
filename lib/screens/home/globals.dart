@@ -24,8 +24,6 @@ int dayToInt(String day) {
     case 'saturday':
       return 6;
     case 'wensday':
-      print('josh is idot');
-      log('data: josh is idot');
       return 3;
 
     default:
@@ -49,6 +47,8 @@ String intToDay(int day) {
       return 'Friday';
     case 6:
       return 'Saturday';
+    case -1:
+      return 'Today';
     default:
       return '';
   }
