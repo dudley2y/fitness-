@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:fitness/models/testSplit.dart';
+import 'package:fitness/models/workout.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
+import 'package:fitness/screens/home/todaysWorkout.dart/todaysWrapper.dart';
 import 'package:fitness/services/authentication_service.dart';
-import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editWorkout.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editWorkout.dart';  
 
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
@@ -22,6 +24,8 @@ class HomeRoute extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeRoute();
 }
 
+final tempWorkout = test().init();
+
 class _HomeRoute extends State<HomeRoute> {
   void logout(BuildContext context) {
     context.read<AuthenticationService>().signOut();
@@ -34,10 +38,15 @@ class _HomeRoute extends State<HomeRoute> {
   }
 
   int _currDay = today;
+
   double _swipeDistance = 0; 
 
   @override
   Widget build(BuildContext context) {
+
+    Workout _currWorkout = tempWorkout.getData(intToDay(_currDay));
+    
+    print(_currWorkout.workout);
 
     return Scaffold(
       backgroundColor: const Color(0xFFEDF6F9),
@@ -84,7 +93,7 @@ class _HomeRoute extends State<HomeRoute> {
 
                 if(_swipeDistance > sensitivty){
                   setState(() {
-                    _currDay++;
+                    _currDay--;
                     _currDay%=7;
                     _swipeDistance = 0;
                   });
@@ -92,7 +101,7 @@ class _HomeRoute extends State<HomeRoute> {
                 // swipe left 
                 if(_swipeDistance < -sensitivty){
                   setState(() {
-                    _currDay--;
+                    _currDay++;
                     _currDay%=7;
                     _swipeDistance = 0;
                   });
@@ -118,6 +127,7 @@ class _HomeRoute extends State<HomeRoute> {
                                     ),
                       )
                   ),
+                  TodaysWrapper(todaysLifts: _currWorkout)
             ]
           ),
         ),

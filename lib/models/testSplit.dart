@@ -8,7 +8,7 @@ class test{
   final Split temp = Split();
 
 
-  void init(){
+  Split init(){
 
     final Workout monday = Workout();
 
@@ -39,8 +39,8 @@ class test{
     monday.addworkout(BS);
     monday.addworkout(PS);
     monday.addworkout(BBP);
-
-    temp.monday = monday;
+    
+    temp.addDay("Monday", monday);
 
     // Tuesday
 
@@ -74,7 +74,7 @@ class test{
     tuesday.addworkout(PF);
     tuesday.addworkout(BOP);
 
-    temp.tuesday = tuesday;
+    temp.addDay("Tuesday", tuesday);
 
     // Wens Nothing 
 
@@ -101,7 +101,7 @@ class test{
     thursday.addworkout(CU);
     thursday.addworkout(CRF);
 
-    temp.thursday = thursday;
+    temp.addDay("Thursday", thursday);
 
     // Friday 
 
@@ -117,8 +117,7 @@ class test{
 
     friday.addworkout(IDB);
 
-
-    temp.friday = friday;
+    temp.addDay("Friday", friday);
 
 
     // Saturday 
@@ -144,8 +143,9 @@ class test{
     saturday.addworkout(CL);
     saturday.addworkout(PSG);
 
-    temp.saturday = saturday;
-
+    temp.addDay("Satuday", saturday);
     // Sunday off
+
+    return temp;
   }
 }

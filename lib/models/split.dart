@@ -1,13 +1,13 @@
 import 'package:fitness/models/workout.dart';
 
 class Split { 
-  late Workout monday;
-  late Workout tuesday; 
-  late Workout wensday; 
-  late Workout thursday; 
-  late Workout friday;
-  late Workout saturday; 
-  late Workout sunday;
+  late Workout monday = Workout();
+  late Workout tuesday = Workout(); 
+  late Workout wensday = Workout(); 
+  late Workout thursday = Workout(); 
+  late Workout friday = Workout();
+  late Workout saturday = Workout(); 
+  late Workout sunday = Workout();
 
   void addDay(String day, Workout dayContent){
     switch(day){

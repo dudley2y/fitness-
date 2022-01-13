@@ -22,7 +22,7 @@ class RepsAndWeight{
 }
 
 class Exercise{ 
-  late List<RepsAndWeight> content; 
+  List<RepsAndWeight> content = List<RepsAndWeight>.empty(growable: true);
   String name;
 
   Exercise({required this.name});
