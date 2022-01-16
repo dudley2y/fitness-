@@ -17,74 +17,143 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
   List<Widget> workoutList = [];
   final TextEditingController excersizeNameCtl =
       TextEditingController(text: 'Excercise Name Here');
-  final TextEditingController setCtl = TextEditingController(text: 'Sets');
+  final TextEditingController setCtl = TextEditingController();
   final TextEditingController repCtl = TextEditingController(text: 'Reps');
+  final TextEditingController weightCtl = TextEditingController(text: 'Weight');
+  final _setFormKey = GlobalKey<FormState>();
 
+  String dropdownValue = 'Constant Reps';
   ElevatedButton addWorkoutButton = ElevatedButton(
     onPressed: () {},
     child: const Text('1'),
   );
+/*
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '*Please enter a name.';
+                }
+                return null;
+              },
+              obscureText: false,
+              decoration: const InputDecoration(labelText: 'Split Name'),
+              controller: splitNameController,
+            ),
+          )
+*/
+  int _sets = 0;
 
   @override
   Widget build(BuildContext context) {
-    String name = '', reps = '', sets = '';
+    final TextField _repTextFeild = TextField(
+      controller: repCtl,
+      onTap: () => repCtl.clear(),
+    );
+    final Form setForm = Form(
+        onChanged: () => _setFormKey.currentState!.validate(),
+        key: _setFormKey,
+        child: TextFormField(
+          onFieldSubmitted: (value) {
+            try {
+              _sets = int.parse(value.trim());
+            } on FormatException {
+              _sets = 0;
+            }
+            setState(() {});
+          },
+          validator: (value) {
+            // int x = 0;
+            if (value == null || value.isEmpty) {
+              _sets = 1;
+              return 'Please enter a number';
+            }
+            try {
+              _sets = int.parse(value.trim());
+            } on FormatException {
+              _sets = 1;
+              return 'Please enter a number';
+            }
+            setState(() {});
+          },
+          obscureText: false,
+          decoration: const InputDecoration(labelText: 'Number of sets'),
+          controller: setCtl,
+        ));
+    final TextField _weightTextFeild = TextField(
+      controller: weightCtl,
+      onTap: () => weightCtl.clear(),
+    );
 
+    String name = '', reps = '', sets = '';
     return Scaffold(
       appBar: AppBar(title: const Text('Adding workout!')),
       body: Column(
-        children: <Widget>[
-          TextField(
-            controller: excersizeNameCtl,
-            onTap: () => excersizeNameCtl.clear(),
-            // add submit button, so we can have multiple text feilds,
-            //one for workout name, another for sets, reps, and will need to add autofill/dropdown
-            onSubmitted: (text) {
-              if (text.isNotEmpty) {
-                name = excersizeNameCtl.text;
-              }
-            },
-          ),
-          TextField(
-            controller: setCtl,
-            onTap: () => setCtl.clear(),
-            // add submit button, so we can have multiple text feilds,
-            //one for workout name, another for sets, reps, and will need to add autofill/dropdown
-            onSubmitted: (text) {
-              if (text.isNotEmpty) {
-                sets = setCtl.text;
-              }
-            },
-          ),
-          TextField(
-            controller: repCtl,
-            onTap: () => repCtl.clear(),
-            // add submit button, so we can have multiple text feilds,
-            //one for workout name, another for sets, reps, and will need to add autofill/dropdown
-            onSubmitted: (text) {
-              reps = repCtl.text;
-            },
-          ),
-
-          ElevatedButton(
-              onPressed: () {
-                widget.metaList[widget.day].add(ExcerciseMeta(
-                    name: excersizeNameCtl.text,
-                    rep: repCtl.text,
-                    set: setCtl.text,
-                    notes: 'none so far',
-                    done: false));
-                excersizeNameCtl.clear();
-                setState(() {});
-                Navigator.pop(context);
-              },
-              child: const Text('Add Workout!')),
-          // ExerciseWidget(title:eCtrl.text,desc: eCtrl.text ),
+        children: [
+          DropdownButton(
+              value: dropdownValue,
+              items: <String>[
+                'Constant Reps',
+                'Variable Reps',
+                'Timed',
+                'Circut'
+              ].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? index) {
+                setState(() {
+                  dropdownValue = index!;
+                });
+              }),
+          dropdownValue == 'Constant Reps'
+              ? Column(children: [
+                  TextField(
+                    controller: excersizeNameCtl,
+                    onTap: () => excersizeNameCtl.clear(),
+                  ),
+                  GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 2,
+                    children: [_repTextFeild, setForm, _weightTextFeild],
+                  ),
+                ])
+              : dropdownValue == 'Variable Reps'
+                  ? Column(children: [
+                      GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 2,
+                        children: [
+                          TextField(
+                            controller: excersizeNameCtl,
+                            onTap: () => excersizeNameCtl.clear(),
+                          ),
+                          setForm
+                        ],
+                      ),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _setFormKey.currentState!.validate()
+                              ? _sets.ceil().clamp(0, 20)
+                              : 1,
+                          itemBuilder: (BuildContext context, index) {
+                            // print('index: $_sets');
+                            return const Text('foo');
+                          })
+                    ])
+                  : Text('bar'),
         ],
       ),
     );
   }
 }
-
 
 /** 
  * use validator in leiu of controllers, see signup

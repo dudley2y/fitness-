@@ -21,6 +21,12 @@ class DatabaseService {
     return users_splits_names_ref.doc(uid).collection("names").get();
   }
 
+  /// Long name, but there should be an easier way to get this
+  Future<DocumentSnapshot<Object?>>
+      getUserSplitNamesAsDocumentSnapshot() async {
+    return users_splits_names_ref.doc(uid).get();
+  }
+
   Future<DocumentSnapshot<Object?>> getUserSplits(String name) async {
     return users_splits_ref.doc(uid).get();
   }

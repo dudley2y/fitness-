@@ -1,9 +1,14 @@
+import 'dart:collection';
+
 import 'package:fitness/models/makeABetterName.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
-import 'package:fitness/screens/home/homeFab/expandablefab.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorkout.dart';
+import 'package:fitness/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/src/provider.dart';
 
 import 'exerciseWidget.dart';
 
@@ -11,7 +16,9 @@ class CreateSplit extends StatefulWidget {
   CreateSplit({Key? key, required this.name}) : super(key: key);
   final String name;
   int editDay = viewDay = dayToInt('Sunday');
+  bool dirty = false;
 
+  // a dirty split is saved/changed locally, but not synced with firebase
   final List<List<ExcerciseMeta>> _splitMeta = [[], [], [], [], [], [], []];
   @override
   State<StatefulWidget> createState({name}) => _CreateSplit();
@@ -31,6 +38,22 @@ class _CreateSplit extends State<CreateSplit> {
     setState(() {});
   }
 
+  Map<String, dynamic> toFbMap(List<List<ExcerciseMeta>> list) {
+    ///map<map<string,array>> => split<excercise<info>> => PPL[Monday][Bench] = 5x5
+    ///PPL is covered in widget.name
+    Map<String, dynamic> result = {};
+    int dayInt = 0;
+    for (var day in list) {
+      result[intToDay(dayInt)] = {};
+      for (var excercise in day) {
+        result[intToDay(dayInt)]
+            [excercise.name] = [excercise.set, excercise.rep];
+      }
+      dayInt++;
+    }
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     // one entry per day;
@@ -41,7 +64,29 @@ class _CreateSplit extends State<CreateSplit> {
         actions: [
           IconButton(
             onPressed: () {
-              print('saved?');
+              DatabaseService dbs =
+                  DatabaseService(uid: context.read<User?>()!.uid);
+              FirebaseFirestore.instance.runTransaction((transaction) async {
+                DocumentSnapshot fresh =
+                    await dbs.getUserSplitNamesAsDocumentSnapshot();
+                // fresh.reference.
+                Map<String, dynamic> fmap = HashMap();
+                fmap[widget.name] = '';
+                // return;
+                await fresh.reference // add to users_splits_names
+                    .collection('names')
+                    .doc(widget.name)
+                    .set(fmap);
+                DocumentSnapshot fresh2 = // add to users_splits
+                    // this returns a _jsonQuery
+                    dbs.getUserSplits(widget.name) as DocumentSnapshot;
+                await fresh2.reference
+                    .collection('user_splits')
+                    .doc(widget.name)
+                    .set(toFbMap(widget._splitMeta));
+                widget.dirty = false;
+                // await transaction.set(fresh.reference, fmap);
+              });
             },
             icon: const Icon(Icons.upload_sharp),
             tooltip: 'Save split to cloud',
@@ -59,7 +104,7 @@ class _CreateSplit extends State<CreateSplit> {
                         metaList: widget._splitMeta,
                         day: widget.editDay,
                       )));
-
+          widget.dirty = true;
           setState(() {});
         },
       ),
@@ -76,7 +121,7 @@ class _CreateSplit extends State<CreateSplit> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
               Icons.arrow_left,

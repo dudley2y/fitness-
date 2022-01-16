@@ -1,0 +1,50 @@
+
+split name: >map
+    Sunday: >map
+        Bench: >array?
+            1:  reps:10
+                wieght:135
+            2:  reps:8
+                weight:165
+            .
+            .
+            .
+            5: ...
+        OHP:
+            .
+            .
+            .
+        .
+        .
+        .
+        Abs:
+            1: reps: 3
+                 weight?:
+                        Plank:30s
+                        MountainClimbers:30s
+            ...
+        Cardio:
+            1: 50m x 3, 30s rest
+            2: 400m run, 50m jog x 3
+            3: ...
+            .
+            .
+            .
+        Stretches:
+            DD:
+                30s hold
+            
+        
+
+    Monday:
+    .
+    .
+    .
+    Saturday:
+
+    map<String,map<
+        string,map<
+            string,array[tuple<reps(string),weight(string)[]>]>>>
+
+
+        Map<Day,
