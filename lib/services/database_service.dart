@@ -8,7 +8,6 @@ class DatabaseService {
 
   final uid;
 
-
   DatabaseService({this.uid});
 
 
@@ -68,5 +67,11 @@ class DatabaseService {
     final users_splits = await users_splits_ref.doc(uid).get();
     Map<String, dynamic> users_splits_data = users_splits.data() as Map<String,dynamic>;
     return convertJsonToSplit(users_splits_data[split]);
+  }
+
+  Future<String> getUserFirstName() async{
+    final user =  await users_ref.doc(uid).get();
+    Map<String, dynamic> user_data = user.data() as Map <String, dynamic>;
+    return user_data["first_name"];
   }
 }

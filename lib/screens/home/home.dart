@@ -1,5 +1,8 @@
+// ignore_for_file: dead_code
+
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness/models/testSplit.dart';
 import 'package:fitness/models/workout.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
@@ -107,6 +110,20 @@ class _HomeRoute extends State<HomeRoute> {
               },
               child: Column(
                 children: [
+                  FutureBuilder(
+                    future:  DatabaseService(uid: context.read<User>().uid).getUserFirstName(),
+                    builder: (BuildContext context, AsyncSnapshot<String> firstName ){
+                      switch (firstName.connectionState) {
+                        case (ConnectionState.none): return const Text("Hi");
+                        case (ConnectionState.waiting): return const Text("Loading...");
+                        case (ConnectionState.done):
+                          if(firstName.hasData) return Text("Hi " + firstName.data!);
+                          else return const Text("Maybe play league instead of gym today");
+                        default: return const Text("Idek bud");
+                      }
+                    }
+                  ),
+                 
                   Container(  
                     alignment: Alignment.center,
                     width: MediaQuery.of(context).size.width ,
