@@ -45,9 +45,7 @@ class _HomeRoute extends State<HomeRoute> {
   Widget build(BuildContext context) {
 
     Workout _currWorkout = tempWorkout.getData(intToDay(_currDay));
-    
-    print(_currWorkout.workout);
-
+  
     return Scaffold(
       backgroundColor: const Color(0xFFEDF6F9),
       floatingActionButton: ExpandableFab(distance: 112, children: [

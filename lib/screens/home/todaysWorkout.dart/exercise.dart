@@ -8,7 +8,23 @@ class displayExercise extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Text(exercise.name),
+      title: Text(exercise.name),
+      subtitle: Container(
+        height: 250,
+        child: ListView.builder(
+          itemCount: exercise.content.length,
+          itemBuilder: (context,index){
+            
+            return ListTile(  
+              leading: RichText(
+                text: TextSpan(text:"Set: "+ (index + 1).toString() + "    " + 
+                                    "Reps: " +  exercise.content[index].reps.toString() + "    " + 
+                                    "Weight: " + exercise.content[index].weight.toString()
+                              ) 
+              ),
+            );
+          })
+      ),
     );
   }
 }
