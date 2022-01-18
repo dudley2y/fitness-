@@ -4,9 +4,9 @@ import 'package:fitness/models/makeABetterName.dart';
 import 'package:flutter/material.dart';
 
 class AddNewWorkout extends StatefulWidget {
-  AddNewWorkout({Key? key, required this.metaList, required this.day})
+  AddNewWorkout({Key? key, required this.exerciseList, required this.day})
       : super(key: key);
-  List<List<ExcerciseMeta>> metaList;
+  List<Exercise> exerciseList;
   int day;
 
   @override
@@ -14,7 +14,7 @@ class AddNewWorkout extends StatefulWidget {
 }
 
 class _AddNewWorkoutState extends State<AddNewWorkout> {
-  List<Widget> workoutList = [];
+  List<Exercise> workoutList = [];
   final TextEditingController excersizeNameCtl =
       TextEditingController(text: 'Excercise Name Here');
   final TextEditingController setCtl = TextEditingController();
@@ -25,12 +25,44 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
   final _repFormKey = GlobalKey<FormState>();
   final _weightFormKey = GlobalKey<FormState>();
   final _timeFormKey = GlobalKey<FormState>();
+  String _name = '';
+  List<int> vrepsList = [];
 
-  String dropdownValue = 'Constant Reps';
+  String _dropdownValue = 'Constant Reps';
   ElevatedButton addWorkoutButton = ElevatedButton(
     onPressed: () {},
     child: const Text('1'),
   );
+  void _onBottomNavBarTap() {
+    int reps = _reps;
+    int sets = _sets;
+    int weight = _weight;
+    String time = _time;
+    Exercise ex;
+    switch (_dropdownValue) {
+      case 'Constant Reps':
+        ex = ConstantRepExercise(
+            name: excersizeNameCtl.text.trim(),
+            reps: _reps,
+            sets: _sets,
+            weight: _weight);
+        break;
+      case 'Variable Reps':
+        ex = VariableRepExercise(
+            name: excersizeNameCtl.text.trim(), reps: vrepsList);
+        print('vrep len: ${vrepsList.length}');
+        break;
+      case 'Timed':
+        ex = TimedExercise(name: excersizeNameCtl.text.trim(), time: _time);
+        break;
+      default:
+        ex = Exercise(type: ExerciseType.creps, name: 'error');
+    }
+    widget.exerciseList.add(ex);
+    Navigator.pop(context);
+    // print('$reps, $sets, $weight, $time');
+  }
+
 /*
           Form(
             key: _formKey,
@@ -51,7 +83,6 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
   int _reps = 0;
   int _weight = 0;
   String _time = '';
-  List<String> vrepsList = [];
   List<List<String>> circutList = [];
 
   @override
@@ -118,13 +149,13 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
           validator: (value) {
             // int x = 0;
             if (value == null || value.isEmpty) {
-              _sets = 1;
+              _reps = 1;
               return 'Please enter a number';
             }
             try {
-              _sets = int.parse(value.trim());
+              _reps = int.parse(value.trim());
             } on FormatException {
-              _sets = 1;
+              _reps = 1;
               return 'Please enter a number';
             }
             setState(() {});
@@ -199,13 +230,16 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
           controller: timeCtl,
         ));
 
-    String name = '', reps = '', sets = '';
     return Scaffold(
       appBar: AppBar(title: const Text('Adding workout!')),
+      floatingActionButton: ElevatedButton(
+        child: Icon(Icons.check),
+        onPressed: () => _onBottomNavBarTap(),
+      ),
       body: Column(
         children: [
           DropdownButton(
-              value: dropdownValue,
+              value: _dropdownValue,
               items: <String>[
                 'Constant Reps',
                 'Variable Reps',
@@ -218,7 +252,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
               }).toList(),
               onChanged: (String? index) {
                 setState(() {
-                  dropdownValue = index!;
+                  _dropdownValue = index!;
                   vrepsList.clear();
                   for (var element in circutList) {
                     element.clear();
@@ -226,7 +260,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
                   circutList.clear();
                 });
               }),
-          dropdownValue ==
+          _dropdownValue ==
                   'Constant Reps' // are there switch cases for widgets?
               ? Column(children: [
                   TextField(
@@ -241,7 +275,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
                     children: [_repForm, _setForm, _weightForm],
                   ),
                 ])
-              : dropdownValue == 'Variable Reps'
+              : _dropdownValue == 'Variable Reps'
                   ? ListView(shrinkWrap: true, children: [
                       Row(
                         children: [
@@ -264,12 +298,13 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
                           itemBuilder: (BuildContext context, index) {
                             // print('index: $_sets');
                             return TextField(
-                              onSubmitted: (value) {
+                              onChanged: (value) {
                                 if (vrepsList.length <= index) {
-                                  vrepsList.add(value);
+                                  vrepsList.add(int.parse((value.trim())));
                                 } else {
-                                  vrepsList[index] = value;
+                                  vrepsList[index] = int.parse((value.trim()));
                                 }
+                                // print('vreps: len= ${vrepsList.length}');
                               },
                             ); // make this not text, make feild
                           })

@@ -6,49 +6,57 @@ class ExcerciseMeta {
 
   late String notes;
   late bool done;
-  late _ExerciseType type;
+  late ExerciseType type;
   String name, set, rep;
 }
 
 @JsonSerializable()
 class Exercise {
-  final _ExerciseType type;
-  Exercise({required this.type});
+  final ExerciseType type;
+  String name;
+  Exercise({required this.type, required this.name});
 }
 
 class ConstantRepExercise extends Exercise {
-  final int sets, reps;
-  ConstantRepExercise({required this.sets, required this.reps, type})
-      : super(type: type);
+  final int sets, reps, weight;
+  String name = '';
+
+  ConstantRepExercise(
+      {required this.name,
+      required this.sets,
+      required this.reps,
+      required this.weight})
+      : super(type: ExerciseType.creps, name: name);
 }
 
 class VariableRepExercise extends Exercise {
   List<int> reps = [];
-  VariableRepExercise({required this.reps, type}) : super(type: type);
+  String name = '';
+
+  VariableRepExercise({required this.name, required this.reps})
+      : super(type: ExerciseType.vreps, name: name);
 }
 
 class TimedExercise extends Exercise {
-  List<String> workoutName = [];
-  List<String> times = [];
-  TimedExercise({required this.workoutName, required this.times, type})
-      : super(type: type);
+  String name = '';
+  String time = '';
+  TimedExercise({required this.name, required this.time})
+      : super(type: ExerciseType.timed, name: name);
 }
 
-class CircutExercise extends Exercise {
-  int reps;
-  List<String> workoutName = [];
-  List<String> times = [];
-  CircutExercise(
-      {required this.reps,
-      required this.workoutName,
-      required this.times,
-      type})
-      : super(type: type);
-}
+// class CircutExercise extends Exercise {
+//   int reps;
+//   List<String> name = [];
+//   List<String> times = [];
+//   // String name;
+//   CircutExercise(
+//       {required this.reps, required this.name, required this.times})
+//       : super(type: _ExerciseType.circut, name: name);
+// }
 
-enum _ExerciseType {
+enum ExerciseType {
   creps,
   vreps,
   timed,
-  circut,
+  // circut,
 }

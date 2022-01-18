@@ -19,7 +19,7 @@ class CreateSplit extends StatefulWidget {
   bool dirty = false;
 
   // a dirty split is saved/changed locally, but not synced with firebase
-  final List<List<ExcerciseMeta>> _splitMeta = [[], [], [], [], [], [], []];
+  final List<List<Exercise>> _splitMeta = [[], [], [], [], [], [], []];
   @override
   State<StatefulWidget> createState({name}) => _CreateSplit();
 }
@@ -38,7 +38,7 @@ class _CreateSplit extends State<CreateSplit> {
     setState(() {});
   }
 
-  Map<String, dynamic> toFbMap(List<List<ExcerciseMeta>> list) {
+  Map<String, dynamic> toFbMap(List<List<Exercise>> list) {
     ///map<map<string,array>> => split<excercise<info>> => PPL[Monday][Bench] = 5x5
     ///PPL is covered in widget.name
     Map<String, dynamic> result = {};
@@ -46,8 +46,8 @@ class _CreateSplit extends State<CreateSplit> {
     for (var day in list) {
       result[intToDay(dayInt)] = {};
       for (var excercise in day) {
-        result[intToDay(dayInt)]
-            [excercise.name] = [excercise.set, excercise.rep];
+        result[intToDay(dayInt)];
+        // [excercise.name] = [excercise.set, excercise.rep];
       }
       dayInt++;
     }
@@ -101,7 +101,7 @@ class _CreateSplit extends State<CreateSplit> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddNewWorkout(
-                        metaList: widget._splitMeta,
+                        exerciseList: widget._splitMeta[viewDay], //bug?
                         day: widget.editDay,
                       )));
           widget.dirty = true;
@@ -113,10 +113,8 @@ class _CreateSplit extends State<CreateSplit> {
         itemCount: widget._splitMeta[widget.editDay].length,
         itemBuilder: (BuildContext context, int index) {
           return ExerciseWidget(
-            title: widget._splitMeta[widget.editDay][index].name,
-            desc: widget._splitMeta[widget.editDay][index].set +
-                ' x ' +
-                widget._splitMeta[widget.editDay][index].rep,
+            //extend to show types
+            exercise: widget._splitMeta[widget.editDay][index],
           );
         },
       ),

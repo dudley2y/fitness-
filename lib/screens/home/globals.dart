@@ -54,8 +54,8 @@ String intToDay(int day) {
   }
 }
 
-List<ExcerciseMeta> excerciseMeta = [];
-List<List<ExcerciseMeta>> dailyExcerciseMeta = [
+List<Exercise> excercises = [];
+List<List<Exercise>> dailyExcercises = [
   [],
   [],
   [],
@@ -68,7 +68,14 @@ final String todayString = getDay();
 final int today = dayToInt(todayString);
 int viewDay =
     today; // today is today, viewDay is the day((of the week) the user is looking at rn
-bool flag2 = false;// bad idea, but eh
+bool flag2 = false; // bad idea, but eh
+
+enum _ExerciseType {
+  creps,
+  vreps,
+  timed,
+  circut,
+}
 
 /**
  * maybe there is a better way to pass data across pages, but this was the easiest

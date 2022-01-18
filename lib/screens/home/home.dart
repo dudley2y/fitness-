@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitness/models/makeABetterName.dart';
 import 'package:fitness/screens/home/homeFab/actionbutton.dart';
@@ -7,7 +6,6 @@ import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/addNewWorko
 import 'package:fitness/services/authentication_service.dart';
 import 'package:fitness/screens/home/homeFabOptions/editExerciseSplit/editWorkout.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
@@ -16,6 +14,13 @@ import 'package:fitness/services/database_service.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/nameNewSplit.dart';
+
+// enum _ExerciseType {
+//   creps,
+//   vreps,
+//   timed,
+//   circut,
+// }
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -49,6 +54,19 @@ class _HomeRoute extends State<HomeRoute> {
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
+                  viewDay--;
+                  if (viewDay < 0) viewDay = 6;
+                  setState(() {
+                    // printDBInfo(uid);
+                    // print('flag ${getFlag()}');
+                  });
+                },
+                child: const Icon(Icons.arrow_back, size: 26.0),
+              )),
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
                   viewDay++;
                   viewDay %= 7;
                   setState(() {
@@ -57,7 +75,7 @@ class _HomeRoute extends State<HomeRoute> {
                   });
                 },
                 child: const Icon(Icons.arrow_forward, size: 26.0),
-              ))
+              )),
         ],
       ),
       floatingActionButton: ExpandableFab(distance: 112, children: [
@@ -69,7 +87,7 @@ class _HomeRoute extends State<HomeRoute> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddNewWorkout(
-                            metaList: dailyExcerciseMeta,
+                            exerciseList: dailyExcercises[viewDay],
                             day: viewDay,
                           )));
               setState(() {});
@@ -108,35 +126,29 @@ class _HomeRoute extends State<HomeRoute> {
                     snapshot.data?.data() as Map<String, dynamic>;
                 // populate list
                 if (users_splits_data.isEmpty &&
-                    dailyExcerciseMeta[viewDay].isEmpty) {
+                    dailyExcercises[viewDay].isEmpty) {
                   return Text('No plan for ${intToDay(today)}} yet.');
                 } else if (users_splits_data.isNotEmpty &&
-                    dailyExcerciseMeta[viewDay].isEmpty &&
+                    dailyExcercises[viewDay].isEmpty &&
                     !flag2) {
-                  flag2 =
+                  flag2 = // display the current workout
+                      //TODO : add logic for converting from DB object to list based on different type of exercises
                       true; // not the best way, the .isEmpty should correspond to the day appended to, but this works
                   for (var day in users_splits_data[currSplit].keys) {
                     for (var ex in users_splits_data[currSplit][day].keys) {
-                      dailyExcerciseMeta[dayToInt(day)].add(ExcerciseMeta(
-                          name: ex ?? 'null',
-                          set: ex?.length.toString() ?? '0',
-                          rep: users_splits_data[currSplit][day][ex][0]
-                                  ['reps'] ??
-                              '0'));
+                      dailyExcercises[dayToInt(day)].add(Exercise(
+                          name: ex ?? 'null', type: ExerciseType.creps));
                     }
                   }
                 }
               }
-
+              // here we actually display the local list
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount: dailyExcerciseMeta[viewDay].length,
+                itemCount: dailyExcercises[viewDay].length,
                 itemBuilder: (BuildContext context, int index) {
                   return ExerciseWidget(
-                    title: dailyExcerciseMeta[viewDay][index].name,
-                    desc: dailyExcerciseMeta[viewDay][index].set +
-                        ' x ' +
-                        dailyExcerciseMeta[viewDay][index].rep,
+                    exercise: dailyExcercises[viewDay][index],
                   );
                 },
               );
