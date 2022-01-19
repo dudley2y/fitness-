@@ -44,7 +44,7 @@ class _LoginFormState extends State<LoginForm> {
                 Column(
                   children: [
                     Container(
-                      height: 250,
+                      height: 275,
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           boxShadow: [
@@ -127,11 +127,11 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 Container(
                   transform: Matrix4.translationValues(0, -70, 0),
-                  child: Column(
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.only(top: 230),
-                          child: Align(
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 250),
+                      child: Column(
+                        children: [
+                          Align(
                             alignment: Alignment.topCenter,
                             child: SizedBox(
                               width: 250,
@@ -158,9 +158,23 @@ class _LoginFormState extends State<LoginForm> {
                                   style: ElevatedButton.styleFrom(
                                       primary: Colors.blue[800])),
                             ),
-                          )),
-                    ],
-                  ),
+                          ),
+                          Padding(   
+                            padding: EdgeInsets.only(top:20),
+                            child: ElevatedButton(   
+                              onPressed: (){ widget.toggleView();},
+                              child: const Text("Sign up"),
+                            ),
+                          ),
+                          Padding(   
+                            padding: EdgeInsets.only(top:10),
+                            child: ElevatedButton(   
+                              onPressed: (){},
+                              child: const Text("Forgot Password - Doesn't work don't Press :P "),
+                            ),
+                          )
+                        ],
+                      )),
                 ),
               ],
             ),
