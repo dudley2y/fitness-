@@ -78,6 +78,12 @@ class _HomeRoute extends State<HomeRoute> {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => NameSplit()));
           },
+        ),
+        ActionButton(
+          icon: Icon(Icons.logout),
+          onPressed: (){
+            context.read<AuthenticationService>().signOut();
+          },
         )
       ]),
       body: 
