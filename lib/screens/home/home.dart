@@ -134,12 +134,12 @@ class _HomeRoute extends State<HomeRoute> {
                   flag2 = // display the current workout
                       //TODO : add logic for converting from DB object to list based on different type of exercises
                       true; // not the best way, the .isEmpty should correspond to the day appended to, but this works
-                  for (var day in users_splits_data[currSplit].keys) {
-                    for (var ex in users_splits_data[currSplit][day].keys) {
-                      dailyExcercises[dayToInt(day)].add(Exercise(
-                          name: ex ?? 'null', type: ExerciseType.creps));
-                    }
-                  }
+                  // for (var day in users_splits_data[currSplit].keys) {
+                  //   for (var ex in users_splits_data[currSplit][day].keys) {
+                  //     dailyExcercises[dayToInt(day)].add(Exercise(
+                  //         name: ex ?? 'null', type: ExerciseType.creps));
+                  //   }
+                  // }
                 }
               }
               // here we actually display the local list

@@ -42,14 +42,17 @@ class _CreateSplit extends State<CreateSplit> {
     ///map<map<string,array>> => split<excercise<info>> => PPL[Monday][Bench] = 5x5
     ///PPL is covered in widget.name
     Map<String, dynamic> result = {};
-    int dayInt = 0;
-    for (var day in list) {
-      result[intToDay(dayInt)] = {};
-      for (var excercise in day) {
-        result[intToDay(dayInt)];
-        // [excercise.name] = [excercise.set, excercise.rep];
+    int i = 0;
+    int j = 0;
+    for (List day in list) {
+      result[intToDay(i)] = {};
+      j = 0;
+      for (Exercise exc in day) {
+        result[intToDay(i)][j.toString()] =
+            exc.toMap(); //int as key? why not exc.name?
+        j++;
       }
-      dayInt++;
+      i++;
     }
     return result;
   }
@@ -64,6 +67,7 @@ class _CreateSplit extends State<CreateSplit> {
         actions: [
           IconButton(
             onPressed: () {
+              // sync w/ db
               DatabaseService dbs =
                   DatabaseService(uid: context.read<User?>()!.uid);
               FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -71,20 +75,23 @@ class _CreateSplit extends State<CreateSplit> {
                     await dbs.getUserSplitNamesAsDocumentSnapshot();
                 // fresh.reference.
                 Map<String, dynamic> fmap = HashMap();
-                fmap[widget.name] = '';
+                fmap[widget.name] = ''; // this is fine, it just puts name
                 // return;
                 await fresh.reference // add to users_splits_names
                     .collection('names')
                     .doc(widget.name)
                     .set(fmap);
+
+                /** TODO: reimplement this to work with jsonSerializable, via toFbMap*/
                 DocumentSnapshot fresh2 = // add to users_splits
                     // this returns a _jsonQuery
-                    dbs.getUserSplits(widget.name) as DocumentSnapshot;
+                    await dbs.getUserSplits(widget.name) as DocumentSnapshot;
                 await fresh2.reference
                     .collection('user_splits')
                     .doc(widget.name)
                     .set(toFbMap(widget._splitMeta));
                 widget.dirty = false;
+                /** ^^ old ^^ */
                 // await transaction.set(fresh.reference, fmap);
               });
             },
@@ -101,7 +108,7 @@ class _CreateSplit extends State<CreateSplit> {
               context,
               MaterialPageRoute(
                   builder: (context) => AddNewWorkout(
-                        exerciseList: widget._splitMeta[viewDay], //bug?
+                        exerciseList: widget._splitMeta[widget.editDay], //bug?
                         day: widget.editDay,
                       )));
           widget.dirty = true;

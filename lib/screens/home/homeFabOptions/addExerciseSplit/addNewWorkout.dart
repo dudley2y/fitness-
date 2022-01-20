@@ -56,7 +56,7 @@ class _AddNewWorkoutState extends State<AddNewWorkout> {
         ex = TimedExercise(name: excersizeNameCtl.text.trim(), time: _time);
         break;
       default:
-        ex = Exercise(type: ExerciseType.creps, name: 'error');
+        ex = ConstantRepExercise(name: 'error', reps: -1, sets: -1, weight: -1);
     }
     widget.exerciseList.add(ex);
     Navigator.pop(context);
