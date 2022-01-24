@@ -14,6 +14,7 @@ import 'package:fitness/services/database_service.dart';
 import 'package:fitness/screens/home/globals.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/exerciseWidget.dart';
 import 'package:fitness/screens/home/homeFabOptions/addExerciseSplit/nameNewSplit.dart';
+import 'package:fitness/models/split.dart';
 
 // enum _ExerciseType {
 //   creps,
@@ -44,7 +45,7 @@ class _HomeRoute extends State<HomeRoute> {
   Widget build(BuildContext context) {
     final uid = context.read<User?>()!.uid;
     final dbService = DatabaseService(uid: uid);
-    String currSplit = 'PPL'; // will add som scheduling
+    String currSplit = 'test'; // TODO: add some form of user selection
     // need some form of calendar and scheduling here to confirm the split.
     return Scaffold(
       appBar: AppBar(
@@ -112,7 +113,7 @@ class _HomeRoute extends State<HomeRoute> {
           FutureBuilder(
             future: dbService.getUserSplits(currSplit),
             builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                AsyncSnapshot<QuerySnapshot> snapshot) {
               // check for internet connection
               if (snapshot.hasError) {
                 return const Text('Error Lmao');
@@ -120,27 +121,29 @@ class _HomeRoute extends State<HomeRoute> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Text("Loading");
               }
-              if (snapshot.data?.data() != null) {
-                // print("here");
-                Map<String, dynamic> users_splits_data =
-                    snapshot.data?.data() as Map<String, dynamic>;
+              if (snapshot.data?.docs != null) {
+                // print("here");//db read
+                Split usersSplitsData =
+                    Split.fromSnapsot( snapshot.data?.docs.first );//as Map<String, dynamic>;
+                print(usersSplitsData!['Monday']);
                 // populate list
-                if (users_splits_data.isEmpty &&
-                    dailyExcercises[viewDay].isEmpty) {
-                  return Text('No plan for ${intToDay(today)}} yet.');
-                } else if (users_splits_data.isNotEmpty &&
-                    dailyExcercises[viewDay].isEmpty &&
-                    !flag2) {
-                  flag2 = // display the current workout
-                      //TODO : add logic for converting from DB object to list based on different type of exercises
-                      true; // not the best way, the .isEmpty should correspond to the day appended to, but this works
+                // if(usersSplitsData.isNotEmpty){print(usersSplitsData);}else{print('empty');}
+                // if (usersSplitsData.isEmpty &&
+                //     dailyExcercises[viewDay].isEmpty) {
+                //   return Text('No plan for ${intToDay(today)}} yet.');
+                // } else if (usersSplitsData.isNotEmpty &&
+                //     dailyExcercises[viewDay].isEmpty &&
+                //     !flag2) {
+                //   flag2 = // display the current workout
+                //       //TODO : add logic for converting from DB object to list based on different type of exercises
+                //       true; // not the best way, the .isEmpty should correspond to the day appended to, but this works
                   // for (var day in users_splits_data[currSplit].keys) {
                   //   for (var ex in users_splits_data[currSplit][day].keys) {
                   //     dailyExcercises[dayToInt(day)].add(Exercise(
                   //         name: ex ?? 'null', type: ExerciseType.creps));
                   //   }
                   // }
-                }
+                // }
               }
               // here we actually display the local list
               return ListView.builder(

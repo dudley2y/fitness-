@@ -19,4 +19,8 @@ class Split {
     required this.sunday
     });
     
+
+    fromFutureSnapshot(Future futureSnapshot){
+      return Split();
+    }
 }
