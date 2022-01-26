@@ -94,3 +94,34 @@ enum ExerciseType {
   timed,
   // circut,
 }
+
+
+/// @breif converts a string to the appropriate ExerciseType
+/// @param str a string, case agnostic
+/// @returns the ExerciseType found to correspong with the string
+/// @throws Error when no conversion is found
+/// supported conversions are
+///   'constant' -> ExerciseType.creps
+///   'creps'    -> ExerciseType.creps
+///   'timed'    -> ExerciseType.timed
+///   'time'     -> ExerciseType.timed
+///   'variable' -> ExerciseType.vreps
+///   'vreps'    -> ExerciseType.vreps
+ExerciseType strToEnum(String str){
+  str = str.toLowerCase();
+  switch(str){
+    case 'constant':
+      return ExerciseType.creps;
+    case 'creps':
+      return ExerciseType.creps;
+    case 'timed':
+      return ExerciseType.timed;
+    case 'time':
+      return ExerciseType.timed;
+    case 'variable':
+      return ExerciseType.vreps;
+    case 'vreps':
+      return ExerciseType.vreps;
+  }
+  throw Error();
+}

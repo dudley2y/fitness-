@@ -25,7 +25,6 @@ import 'package:fitness/models/split.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({Key? key}) : super(key: key);
-
   @override
   State<StatefulWidget> createState() => _HomeRoute();
 }
@@ -40,9 +39,12 @@ class _HomeRoute extends State<HomeRoute> {
   int getFlag() {
     return flag;
   }
-
+  int _usdlen = 0;
+  bool dbretFlag = false;
+  late Split usersSplitsData;
   @override
   Widget build(BuildContext context) {
+    
     final uid = context.read<User?>()!.uid;
     final dbService = DatabaseService(uid: uid);
     String currSplit = 'test'; // TODO: add some form of user selection
@@ -123,9 +125,10 @@ class _HomeRoute extends State<HomeRoute> {
               }
               if (snapshot.data?.docs != null) {
                 // print("here");//db read
-                Split usersSplitsData =
-                    Split.fromSnapsot( snapshot.data?.docs.first );//as Map<String, dynamic>;
-                print(usersSplitsData!['Monday']);
+                  usersSplitsData =
+                    Split.fromSnapshot( snapshot.data?.docs.first );//as Map<String, dynamic>;
+                _usdlen = usersSplitsData[viewDay].exercises.length;
+                dbretFlag = true;
                 // populate list
                 // if(usersSplitsData.isNotEmpty){print(usersSplitsData);}else{print('empty');}
                 // if (usersSplitsData.isEmpty &&
@@ -148,11 +151,10 @@ class _HomeRoute extends State<HomeRoute> {
               // here we actually display the local list
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount: dailyExcercises[viewDay].length,
+                itemCount: _usdlen,
                 itemBuilder: (BuildContext context, int index) {
                   return ExerciseWidget(
-                    exercise: dailyExcercises[viewDay][index],
-                  );
+                    exercise: dbretFlag? usersSplitsData[viewDay].exercises[index] : ConstantRepExercise(name:'loading',reps: 1, sets: 1, weight: 1));
                 },
               );
             },
