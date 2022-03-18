@@ -90,20 +90,72 @@ class _SignupFormState extends State<SignupForm> {
                                       alignment: Alignment.centerLeft,
 
                                     ),
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a Email';
+                                        }
+                                        return null;
+                                      },
+                                      controller: _firstNameController,
+                                      decoration: const InputDecoration(
+                                        border: UnderlineInputBorder(),
+                                        hintText: 'Enter your First Name',
+                                      ),
+                                    ),
                                     Align(
                                       child: Text("Email", style: TextStyle( fontSize: 20, color: Colors.blue[800])),
                                       alignment: Alignment.centerLeft,
 
+                                    ),
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a Email';
+                                        }
+                                        return null;
+                                      },
+                                      controller: _firstNameController,
+                                      decoration: const InputDecoration(
+                                        border: UnderlineInputBorder(),
+                                        hintText: 'Enter your First Name',
+                                      ),
                                     ),
                                     Align(
                                       child: Text("Password", style: TextStyle( fontSize: 20, color: Colors.blue[800])),
                                       alignment: Alignment.centerLeft,
 
                                     ),
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a Email';
+                                        }
+                                        return null;
+                                      },
+                                      controller: _firstNameController,
+                                      decoration: const InputDecoration(
+                                        border: UnderlineInputBorder(),
+                                        hintText: 'Enter your First Name',
+                                      ),
+                                    ),
                                     Align(
                                       child: Text("Confirm Password", style: TextStyle( fontSize: 20, color: Colors.blue[800])),
                                       alignment: Alignment.centerLeft,
-                                    )
+                                    ),
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Please enter a Email';
+                                        }
+                                        return null;
+                                      },
+                                      controller: _firstNameController,
+                                      decoration: const InputDecoration(
+                                        border: UnderlineInputBorder(),
+                                        hintText: 'Enter your First Name',
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )
